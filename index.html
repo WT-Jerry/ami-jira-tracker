@@ -3,80 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMI JIRA Issue Tracker (Cloud Sync)</title>
+    <title>AMI JIRA Issue Tracker (Pro Edition)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f8f9fa; }
-        .container { max-width: 1200px; }
-        .bg-open { background-color: #dc3545 !important; color: white !important; }
-        .bg-closed { background-color: #198754 !important; color: white !important; }
+        :root { --ami-red: #dc3545; --ami-green: #198754; }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .container { max-width: 1300px; }
+        .card { border: none; border-radius: 12px; }
+        .bg-open { background-color: var(--ami-red) !important; color: white !important; }
+        .bg-closed { background-color: var(--ami-green) !important; color: white !important; }
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.7); display: none; justify-content: center; align-items: center; z-index: 1000;
+            background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .table thead th { background-color: #f8f9fa; border-top: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .jira-code { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #0052cc; }
     </style>
 </head>
-<body class="container mt-5">
-    <div id="loading" class="loading-overlay"><div class="spinner-border text-primary"></div></div>
+<body class="container mt-4">
+    <div id="loading" class="loading-overlay">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <div class="mt-2 fw-bold text-primary">雲端同步中...</div>
+        </div>
+    </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">AMI JIRA Issue Tracker</h2>
-        <span class="badge bg-primary">Cloud Sync (Google Sheets)</span>
+    <!-- Header & Statistics -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.0</small></h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="d-inline-flex gap-3">
+                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-danger border-4">
+                    <div class="text-muted x-small" style="font-size: 0.7rem;">OPEN ISSUES</div>
+                    <div id="openCount" class="h4 fw-bold m-0 text-danger">0</div>
+                </div>
+                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-success border-4">
+                    <div class="text-muted x-small" style="font-size: 0.7rem;">CLOSED</div>
+                    <div id="closedCount" class="h4 fw-bold m-0 text-success">0</div>
+                </div>
+                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-primary border-4">
+                    <div class="text-muted x-small" style="font-size: 0.7rem;">TOTAL</div>
+                    <div id="totalCount" class="h4 fw-bold m-0 text-primary">0</div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <!-- 新增 Issue 表單 -->
+    <!-- 新增表單 -->
     <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title mb-3 fw-bold">新增 Issue</h5>
+        <div class="card-body p-4">
             <div class="row g-3">
                 <div class="col-md-2">
-                    <label class="form-label">Status</label>
-                    <select id="statusInput" class="form-select">
-                        <option value="Open">Open</option>
-                        <option value="Closed">Closed</option>
+                    <label class="form-label fw-bold small text-muted">Status</label>
+                    <select id="statusInput" class="form-select border-2">
+                        <option value="Open">🔴 Open</option>
+                        <option value="Closed">🟢 Closed</option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Function</label>
+                    <label class="form-label fw-bold small text-muted">Function</label>
                     <input type="text" id="functionInput" class="form-control" list="funcList" placeholder="選擇或輸入...">
                     <datalist id="funcList">
                         <option value="BIOS"><option value="BMC"><option value="Unknown">
                     </datalist>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Jira Number</label>
-                    <input type="text" id="jiraInput" class="form-control" placeholder="JIRA-1234">
+                    <label class="form-label fw-bold small text-muted">Jira Number</label>
+                    <input type="text" id="jiraInput" class="form-control" placeholder="JIRA-XXXX" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Issue Title</label>
-                    <input type="text" id="titleInput" class="form-control" placeholder="Issue Title">
+                    <label class="form-label fw-bold small text-muted">Issue Title</label>
+                    <input type="text" id="titleInput" class="form-control" placeholder="描述標題..." required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Link</label>
-                    <input type="url" id="linkInput" class="form-control" placeholder="https://...">
+                    <label class="form-label fw-bold small text-muted">Issue Link</label>
+                    <input type="url" id="linkInput" class="form-control" placeholder="https://..." required>
                 </div>
-                <div class="col-12 text-end">
-                    <button onclick="addIssue()" class="btn btn-primary px-4">新增 Issue</button>
+                <div class="col-12 text-end mt-3">
+                    <button onclick="addIssue()" class="btn btn-primary px-5 fw-bold shadow-sm">
+                        <i class="bi bi-plus-lg"></i> 新增案件
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 搜尋與過濾 -->
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            <div class="input-group shadow-sm">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="searchInput" class="form-control border-start-0" placeholder="快速搜尋 Jira Number、標題或 Function..." oninput="renderIssues()">
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-light shadow-sm border" onclick="fetchIssues()">
+                <i class="bi bi-arrow-clockwise"></i> 刷新雲端
+            </button>
+        </div>
+    </div>
+
     <!-- Issue 列表 -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0 overflow-hidden">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
                     <tr>
-                        <th width="120">Status</th>
-                        <th width="120">Function</th>
-                        <th width="150">Jira Number</th>
+                        <th width="140" class="ps-4">Status</th>
+                        <th width="140">Function</th>
+                        <th width="160">Jira Number</th>
                         <th>Issue Title</th>
-                        <th width="100" class="text-center">Action</th>
+                        <th width="120" class="text-center pe-4">Action</th>
                     </tr>
                 </thead>
-                <tbody id="issueList">
-                    <tr><td colspan="5" class="text-center py-4">載入中...</td></tr>
+                <tbody id="issueList" class="border-top-0">
+                    <tr><td colspan="5" class="text-center py-5"><div class="spinner-grow text-primary spinner-grow-sm"></div> 讀取中...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -93,70 +139,80 @@
                 issues = await response.json();
                 renderIssues();
             } catch (error) {
-                console.error("Error fetching issues:", error);
-                alert("無法讀取雲端資料，請檢查 API 連結或試算表權限。");
+                console.error("Fetch error:", error);
+                alert("雲端讀取失敗，請確認網路或 API 設定。");
             }
             showLoading(false);
         }
 
         function renderIssues() {
             const list = document.getElementById('issueList');
+            const search = document.getElementById('searchInput').value.toLowerCase();
             list.innerHTML = '';
             
-            if (!issues || issues.length === 0) {
-                list.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">目前沒有 Issue 資料</td></tr>';
+            let stats = { Open: 0, Closed: 0, Total: 0 };
+
+            if (!issues || !Array.isArray(issues)) {
+                list.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">雲端無資料或載入錯誤</td></tr>';
                 return;
             }
 
             issues.forEach((issue, index) => {
-                const row = `
-                    <tr>
-                        <td>
-                            <select onchange="updateStatus(${index}, this.value)" class="form-select form-select-sm d-inline-block w-auto ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
-                                <option value="Open" class="bg-white text-dark" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
-                                <option value="Closed" class="bg-white text-dark" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                            </select>
-                        </td>
-                        <td>${issue.function || '-'}</td>
-                        <td><code>${issue.jira_number}</code></td>
-                        <td><a href="${issue.link}" target="_blank" class="text-decoration-none">${issue.title}</a></td>
-                        <td class="text-center">
-                            <button onclick="deleteIssue(${index})" class="btn btn-outline-danger btn-sm">刪除</button>
-                        </td>
-                    </tr>
-                `;
-                list.innerHTML += row;
+                const searchableText = `${issue.jira_number} ${issue.title} ${issue.function}`.toLowerCase();
+                if (searchableText.includes(search)) {
+                    stats.Total++;
+                    stats[issue.status]++;
+
+                    const row = `
+                        <tr>
+                            <td class="ps-4">
+                                <select onchange="updateStatus(${index}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
+                                    <option value="Open" class="bg-white text-dark" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
+                                    <option value="Closed" class="bg-white text-dark" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                                </select>
+                            </td>
+                            <td><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
+                            <td><span class="jira-code">${issue.jira_number}</span></td>
+                            <td><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold text-dark hover-primary">${issue.title}</a></td>
+                            <td class="text-center pe-4">
+                                <button onclick="deleteIssue(${index})" class="btn btn-link text-danger p-0" title="刪除"><i class="bi bi-trash3 fs-5"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                    list.innerHTML += row;
+                }
             });
+
+            if (list.innerHTML === '') {
+                list.innerHTML = '<tr><td colspan="5" class="text-center py-5 text-muted">找不到相符的 Issue</td></tr>';
+            }
+
+            // 更新統計
+            document.getElementById('openCount').innerText = stats.Open;
+            document.getElementById('closedCount').innerText = stats.Closed;
+            document.getElementById('totalCount').innerText = stats.Total;
         }
 
         async function addIssue() {
-            const newIssue = {
+            const n = {
                 status: document.getElementById('statusInput').value,
                 function: document.getElementById('functionInput').value,
                 jira_number: document.getElementById('jiraInput').value,
                 title: document.getElementById('titleInput').value,
                 link: document.getElementById('linkInput').value
             };
-            
-            if(!newIssue.jira_number || !newIssue.title || !newIssue.link) return alert('請填寫必填欄位！');
+            if(!n.jira_number || !n.title || !n.link) return alert('請填寫必要欄位！');
 
             showLoading(true);
             try {
                 await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify([newIssue])
+                    method: "POST", mode: "cors", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify([n])
                 });
                 await fetchIssues();
-                // Clear inputs
-                document.getElementById('jiraInput').value = '';
-                document.getElementById('titleInput').value = '';
-                document.getElementById('linkInput').value = '';
-                document.getElementById('functionInput').value = '';
-            } catch (error) {
-                alert("新增失敗，請稍後再試。");
-            }
+                // Reset
+                ['jiraInput', 'titleInput', 'linkInput', 'functionInput'].forEach(id => document.getElementById(id).value = '');
+            } catch (error) { alert("新增失敗"); }
             showLoading(false);
         }
 
@@ -164,17 +220,12 @@
             showLoading(true);
             try {
                 await fetch(`${API_URL}/${index}`, {
-                    method: "PATCH",
-                    mode: "cors",
-                    headers: { "Content-Type": "application/json" },
+                    method: "PATCH", mode: "cors", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ status: newStatus })
                 });
                 issues[index].status = newStatus;
                 renderIssues();
-            } catch (error) {
-                alert("更新狀態失敗。");
-                fetchIssues();
-            }
+            } catch (error) { alert("更新失敗"); fetchIssues(); }
             showLoading(false);
         }
 
@@ -184,9 +235,7 @@
             try {
                 await fetch(`${API_URL}/${index}`, { method: "DELETE" });
                 await fetchIssues();
-            } catch (error) {
-                alert("刪除失敗。");
-            }
+            } catch (error) { alert("刪除失敗"); }
             showLoading(false);
         }
 
@@ -196,5 +245,6 @@
 
         fetchIssues();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
