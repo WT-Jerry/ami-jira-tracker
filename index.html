@@ -19,13 +19,58 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
-        .stat-card { transition: transform 0.2s; }
+        .stat-card { transition: transform 0.2s; flex: 1; min-width: 100px; }
         .stat-card:hover { transform: translateY(-5px); }
         .table thead th { background-color: #f8f9fa; border-top: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
         .jira-code { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #0052cc; }
+
+        /* 手機版排版優化 */
+        @media (max-width: 767.98px) {
+            .stat-container { gap: 10px !important; }
+            .stat-card { padding: 8px !important; }
+            .stat-card .h4 { font-size: 1.1rem; }
+            
+            /* 將表格轉換為卡片式列表 */
+            .responsive-table thead { display: none; }
+            .responsive-table tr { 
+                display: block; 
+                margin-bottom: 1rem; 
+                border: 1px solid #eee; 
+                border-radius: 12px; 
+                background: white;
+                padding: 10px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            .responsive-table td { 
+                display: flex; 
+                justify-content: b; 
+                align-items: center; 
+                border: none; 
+                padding: 5px 10px;
+                text-align: left;
+            }
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                width: 100px;
+                min-width: 100px;
+                color: #666;
+                font-size: 0.8rem;
+            }
+            .responsive-table td:last-child {
+                justify-content: flex-end;
+                border-top: 1px solid #eee;
+                margin-top: 5px;
+                padding-top: 10px;
+            }
+            .responsive-table td:last-child::before { display: none; }
+            
+            .container { padding-left: 10px; padding-right: 10px; }
+            h2 { font-size: 1.4rem; }
+        }
     </style>
 </head>
-<body class="container mt-4">
+<body class="container mt-3 mt-md-4">
     <!-- 讀取中遮罩 -->
     <div id="loading" class="loading-overlay">
         <div class="text-center">
@@ -36,20 +81,20 @@
 
     <!-- 標題與數據統計 -->
     <div class="row align-items-center mb-4">
-        <div class="col-md-6">
-            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.1</small></h2>
+        <div class="col-md-6 mb-3 mb-md-0">
+            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.2</small></h2>
         </div>
-        <div class="col-md-6 text-end">
-            <div class="d-inline-flex gap-3">
-                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-danger border-4">
-                    <div class="text-muted" style="font-size: 0.7rem;">OPEN ISSUES</div>
+        <div class="col-md-6">
+            <div class="d-flex stat-container gap-2 gap-md-3">
+                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-danger border-4 text-center text-md-start">
+                    <div class="text-muted" style="font-size: 0.7rem;">OPEN</div>
                     <div id="openCount" class="h4 fw-bold m-0 text-danger">0</div>
                 </div>
-                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-success border-4">
+                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-success border-4 text-center text-md-start">
                     <div class="text-muted" style="font-size: 0.7rem;">CLOSED</div>
                     <div id="closedCount" class="h4 fw-bold m-0 text-success">0</div>
                 </div>
-                <div class="stat-card p-2 px-3 bg-white shadow-sm rounded-3 border-start border-primary border-4">
+                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-primary border-4 text-center text-md-start">
                     <div class="text-muted" style="font-size: 0.7rem;">TOTAL</div>
                     <div id="totalCount" class="h4 fw-bold m-0 text-primary">0</div>
                 </div>
@@ -59,36 +104,37 @@
     
     <!-- 新增案件表單 -->
     <div class="card shadow-sm mb-4">
-        <div class="card-body p-4">
-            <div class="row g-3">
-                <div class="col-md-2">
+        <div class="card-body p-3 p-md-4">
+            <h5 class="card-title mb-3 fw-bold d-md-none small">新增案件</h5>
+            <div class="row g-2 g-md-3">
+                <div class="col-6 col-md-2">
                     <label class="form-label fw-bold small text-muted">Status</label>
-                    <select id="statusInput" class="form-select border-2">
+                    <select id="statusInput" class="form-select border-2 form-select-sm form-select-md-normal">
                         <option value="Open">🔴 Open</option>
                         <option value="Closed">🟢 Closed</option>
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-6 col-md-2">
                     <label class="form-label fw-bold small text-muted">Function</label>
-                    <input type="text" id="functionInput" class="form-control" list="funcList" placeholder="選擇或輸入...">
+                    <input type="text" id="functionInput" class="form-control form-control-sm form-control-md-normal" list="funcList" placeholder="選擇...">
                     <datalist id="funcList">
                         <option value="BIOS"><option value="BMC"><option value="Unknown">
                     </datalist>
                 </div>
-                <div class="col-md-2">
+                <div class="col-12 col-md-2">
                     <label class="form-label fw-bold small text-muted">Jira Number</label>
-                    <input type="text" id="jiraInput" class="form-control" placeholder="MSG-XXXXXX" required>
+                    <input type="text" id="jiraInput" class="form-control form-control-sm form-control-md-normal" placeholder="MSG-XXXXXX" required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label fw-bold small text-muted">Issue Title</label>
-                    <input type="text" id="titleInput" class="form-control" placeholder="描述標題..." required>
+                    <input type="text" id="titleInput" class="form-control form-control-sm form-control-md-normal" placeholder="描述標題..." required>
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-md-3">
                     <label class="form-label fw-bold small text-muted">Issue Link</label>
-                    <input type="url" id="linkInput" class="form-control" placeholder="https://..." required>
+                    <input type="url" id="linkInput" class="form-control form-control-sm form-control-md-normal" placeholder="https://..." required>
                 </div>
                 <div class="col-12 text-end mt-3">
-                    <button onclick="addIssue()" class="btn btn-primary px-5 fw-bold shadow-sm">
+                    <button onclick="addIssue()" class="btn btn-primary w-100 w-md-auto px-5 fw-bold shadow-sm btn-sm btn-md-normal">
                         <i class="bi bi-plus-lg"></i> 新增案件
                     </button>
                 </div>
@@ -97,24 +143,24 @@
     </div>
 
     <!-- 搜尋與過濾 -->
-    <div class="row mb-3 align-items-center">
-        <div class="col-md-8">
+    <div class="row mb-3 align-items-center g-2">
+        <div class="col-8 col-md-8">
             <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                <input type="text" id="searchInput" class="form-control border-start-0" placeholder="快速搜尋 Jira Number、標題或 Function..." oninput="renderIssues()">
+                <span class="input-group-text bg-white border-end-0 px-2"><i class="bi bi-search text-muted small"></i></span>
+                <input type="text" id="searchInput" class="form-control border-start-0 form-control-sm form-control-md-normal" placeholder="快速搜尋..." oninput="renderIssues()">
             </div>
         </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-light shadow-sm border" onclick="fetchIssues()">
-                <i class="bi bi-arrow-clockwise"></i> 刷新雲端
+        <div class="col-4 col-md-4 text-end">
+            <button class="btn btn-light shadow-sm border btn-sm btn-md-normal w-100 w-md-auto" onclick="fetchIssues()">
+                <i class="bi bi-arrow-clockwise"></i> <span class="d-none d-md-inline">刷新雲端</span>
             </button>
         </div>
     </div>
 
     <!-- Issue 列表表格 -->
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-sm border-0 bg-transparent bg-md-white">
         <div class="card-body p-0 overflow-hidden">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0 responsive-table">
                 <thead>
                     <tr>
                         <th width="140" class="ps-4">Status</th>
@@ -133,7 +179,7 @@
 
     <!-- 編輯彈出視窗 (Modal) -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title fw-bold">編輯 Issue</h5>
@@ -212,17 +258,17 @@
 
                     list.innerHTML += `
                         <tr>
-                            <td class="ps-4">
+                            <td class="ps-md-4" data-label="Status">
                                 <select onchange="updateStatus(${index}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
                                     <option value="Open" class="bg-white text-dark" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
                                     <option value="Closed" class="bg-white text-dark" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
                                 </select>
                             </td>
-                            <td><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
-                            <td><span class="jira-code">${issue.jira_number}</span></td>
-                            <td><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold text-dark">${issue.title}</a></td>
-                            <td class="text-center pe-4">
-                                <button onclick="openEdit(${index})" class="btn btn-link text-primary p-0 me-2" title="編輯"><i class="bi bi-pencil-square fs-5"></i></button>
+                            <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
+                            <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
+                            <td data-label="Title"><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold text-dark">${issue.title}</a></td>
+                            <td class="text-center pe-md-4">
+                                <button onclick="openEdit(${index})" class="btn btn-link text-primary p-0 me-3" title="編輯"><i class="bi bi-pencil-square fs-5"></i></button>
                                 <button onclick="deleteIssue(${index})" class="btn btn-link text-danger p-0" title="刪除"><i class="bi bi-trash3 fs-5"></i></button>
                             </td>
                         </tr>
@@ -253,6 +299,8 @@
             await fetchIssues();
             document.getElementById('jiraInput').value = '';
             document.getElementById('titleInput').value = '';
+            document.getElementById('linkInput').value = '';
+            document.getElementById('functionInput').value = '';
         }
 
         // 開啟編輯對話框
