@@ -14,7 +14,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-19930"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "MSG-19895",
         "title": "BootSourceOverride not taking into effect",
