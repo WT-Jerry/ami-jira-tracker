@@ -77,7 +77,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20920"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-75433",
         "title": "[Wistron-SVR][Gaines 1.5/2.0]  Share details on attestation support for AMI BIOS and its configuration flags",
