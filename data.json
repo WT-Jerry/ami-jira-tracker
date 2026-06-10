@@ -42,7 +42,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20583"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "Unknown",
         "jira_number": "MSG-20080",
         "title": "dmidecode unable to read system-serial-number",
