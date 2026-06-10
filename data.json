@@ -63,7 +63,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-73110"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BMC+BIOS",
         "jira_number": "BFGS-73326",
         "title": "[Wistron-SVR] How to trigger the transition to Secure Boot 'Deployed Mode' using Redfish URI actions?",
