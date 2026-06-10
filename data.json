@@ -75,5 +75,12 @@
         "jira_number": "MSG-20920",
         "title": "BMCs on Nodes in same data hall that lose SerialNumber",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20920"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-75433",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0]  Share details on attestation support for AMI BIOS and its configuration flags",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-75433?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
     }
 ]
