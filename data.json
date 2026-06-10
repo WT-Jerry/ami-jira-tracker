@@ -82,5 +82,12 @@
         "jira_number": "BFGS-75433",
         "title": "[Wistron-SVR][Gaines 1.5/2.0]  Share details on attestation support for AMI BIOS and its configuration flags",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-75433?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-74212",
+        "title": "[Wistron-SVR] [Gaines 1.5] Inquiry regarding inconsistent ODM BIOS attributes visibility in Redfish URI",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-74212?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
     }
 ]
