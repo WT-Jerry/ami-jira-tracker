@@ -35,7 +35,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20033"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "MSG-20583",
         "title": "Falling to UEFI shell unexpectedly ",
