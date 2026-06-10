@@ -79,12 +79,15 @@
         </div>
     </div>
 
-    <!-- 標題與數據統計 -->
     <div class="row align-items-center mb-4">
         <div class="col-md-6 mb-3 mb-md-0">
-            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.2</small></h2>
+            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.3</small></h2>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 text-md-end">
+            <input type="password" id="patInput" class="form-control form-control-sm d-inline-block" style="width: 200px;" placeholder="Enter GitHub PAT">
+            <button class="btn btn-sm btn-outline-secondary" onclick="savePAT()">Save PAT</button>
+        </div>
+        <div class="col-12 mt-3">
             <div class="d-flex stat-container gap-2 gap-md-3">
                 <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-danger border-4 text-center text-md-start">
                     <div class="text-muted" style="font-size: 0.7rem;">OPEN</div>
@@ -220,25 +223,75 @@
     </div>
 
     <script>
-        // 您的 Sheet.best API 網址
-        const API_URL = "https://api.sheetbest.com/sheets/9c41cfc2-9062-4a4d-8aef-92ad37b5e5a8";
+        // GitHub API 配置
+        const GITHUB_REPO = "WT-Jerry/ami-jira-tracker";
+        const GITHUB_FILE = "data.json";
+        const API_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+        
         let issues = [];
         let editModal;
+        let fileSha = ""; // 需要用來更新檔案
 
         window.onload = () => {
             editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            // 自動載入存好的 PAT
+            const savedPAT = localStorage.getItem('github_pat');
+            if(savedPAT) document.getElementById('patInput').value = savedPAT;
             fetchIssues();
         };
 
-        // 從雲端讀取資料
+        function savePAT() {
+            const pat = document.getElementById('patInput').value;
+            localStorage.setItem('github_pat', pat);
+            fetchIssues();
+        }
+
+        async function getHeaders() {
+            const pat = localStorage.getItem('github_pat');
+            if(!pat) throw new Error("請先輸入並儲存 GitHub PAT");
+            return {
+                "Authorization": `token ${pat}`,
+                "Content-Type": "application/json"
+            };
+        }
+
+        // 從 GitHub 讀取資料
         async function fetchIssues() {
             showLoading(true);
             try {
-                const response = await fetch(API_URL);
-                issues = await response.json();
+                const response = await fetch(API_URL, {
+                    headers: { ...await getHeaders(), "Accept": "application/vnd.github.v3+json" }
+                });
+                const data = await response.json();
+                fileSha = data.sha;
+                issues = JSON.parse(atob(data.content));
                 renderIssues();
             } catch (error) {
-                alert("雲端讀取失敗");
+                console.error(error);
+                alert("GitHub 資料讀取失敗，請確認 PAT 權限是否正確，或檢查 Console 錯誤訊息");
+            }
+            showLoading(false);
+        }
+
+        // 通用更新 GitHub 檔案
+        async function updateGitHubFile(newContent) {
+            showLoading(true);
+            try {
+                const response = await fetch(API_URL, {
+                    method: "PUT",
+                    headers: await getHeaders(),
+                    body: JSON.stringify({
+                        message: "Update tracker data",
+                        content: btoa(JSON.stringify(newContent, null, 4)),
+                        sha: fileSha
+                    })
+                });
+                if(!response.ok) throw new Error("更新失敗");
+                const result = await response.json();
+                fileSha = result.content.sha;
+                await fetchIssues();
+            } catch (e) {
+                alert("更新失敗：" + e.message);
             }
             showLoading(false);
         }
@@ -260,22 +313,21 @@
                         <tr>
                             <td class="ps-md-4" data-label="Status">
                                 <select onchange="updateStatus(${index}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
-                                    <option value="Open" class="bg-white text-dark" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
-                                    <option value="Closed" class="bg-white text-dark" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                                    <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
+                                    <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
                                 </select>
                             </td>
                             <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
                             <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
                             <td data-label="Title"><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold text-dark">${issue.title}</a></td>
                             <td class="text-center pe-md-4">
-                                <button onclick="openEdit(${index})" class="btn btn-link text-primary p-0 me-3" title="編輯"><i class="bi bi-pencil-square fs-5"></i></button>
-                                <button onclick="deleteIssue(${index})" class="btn btn-link text-danger p-0" title="刪除"><i class="bi bi-trash3 fs-5"></i></button>
+                                <button onclick="openEdit(${index})" class="btn btn-link text-primary p-0 me-3"><i class="bi bi-pencil-square fs-5"></i></button>
+                                <button onclick="deleteIssue(${index})" class="btn btn-link text-danger p-0"><i class="bi bi-trash3 fs-5"></i></button>
                             </td>
                         </tr>
                     `;
                 }
             });
-            // 更新看板數據
             document.getElementById('openCount').innerText = stats.Open;
             document.getElementById('closedCount').innerText = stats.Closed;
             document.getElementById('totalCount').innerText = stats.Total;
@@ -291,67 +343,37 @@
                 link: document.getElementById('linkInput').value
             };
             if(!n.jira_number || !n.title) return alert('請填寫必填欄位');
-            showLoading(true);
-            await fetch(API_URL, {
-                method: "POST", mode: "cors", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify([n])
-            });
-            await fetchIssues();
-            document.getElementById('jiraInput').value = '';
-            document.getElementById('titleInput').value = '';
-            document.getElementById('linkInput').value = '';
-            document.getElementById('functionInput').value = '';
-        }
-
-        // 開啟編輯對話框
-        function openEdit(index) {
-            const issue = issues[index];
-            document.getElementById('editIndex').value = index;
-            document.getElementById('editStatus').value = issue.status;
-            document.getElementById('editFunction').value = issue.function || '';
-            document.getElementById('editJira').value = issue.jira_number;
-            document.getElementById('editTitle').value = issue.title;
-            document.getElementById('editLink').value = issue.link;
-            editModal.show();
+            issues.push(n);
+            await updateGitHubFile(issues);
+            // 清空輸入
+            document.querySelectorAll('input, select').forEach(i => { if(i.id.includes('Input')) i.value = ''; });
         }
 
         // 儲存編輯變更
         async function saveEdit() {
             const index = document.getElementById('editIndex').value;
-            const updated = {
+            issues[index] = {
                 status: document.getElementById('editStatus').value,
                 function: document.getElementById('editFunction').value,
                 jira_number: document.getElementById('editJira').value,
                 title: document.getElementById('editTitle').value,
                 link: document.getElementById('editLink').value
             };
-            showLoading(true);
             editModal.hide();
-            await fetch(`${API_URL}/${index}`, {
-                method: "PUT", mode: "cors", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updated)
-            });
-            await fetchIssues();
+            await updateGitHubFile(issues);
         }
 
-        // 快速切換狀態 (Open/Closed)
+        // 快速切換狀態
         async function updateStatus(index, newStatus) {
-            showLoading(true);
-            await fetch(`${API_URL}/${index}`, {
-                method: "PATCH", mode: "cors", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus })
-            });
             issues[index].status = newStatus;
-            renderIssues();
-            showLoading(false);
+            await updateGitHubFile(issues);
         }
 
         // 刪除案件
         async function deleteIssue(index) {
             if(!confirm('確定刪除？')) return;
-            showLoading(true);
-            await fetch(`${API_URL}/${index}`, { method: "DELETE" });
-            await fetchIssues();
+            issues.splice(index, 1);
+            await updateGitHubFile(issues);
         }
 
         function showLoading(s) { document.getElementById('loading').style.display = s ? 'flex' : 'none'; }

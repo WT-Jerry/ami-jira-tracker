@@ -1,0 +1,79 @@
+[
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "MSG-18814",
+        "title": "BootOptions not taking into effect",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-18814"
+    },
+    {
+        "status": "Closed",
+        "function": "Unknown",
+        "jira_number": "MSG-19930",
+        "title": "BIOS Property missing of new BIOS version",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-19930"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "MSG-19895",
+        "title": "BootSourceOverride not taking into effect",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-19895"
+    },
+    {
+        "status": "Closed",
+        "function": "BIOS",
+        "jira_number": "BFG-69373",
+        "title": "[Wistron-SVR] BootSourceOverride not taking into effect",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-69373?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
+    },
+    {
+        "status": "Open",
+        "function": "Unknown",
+        "jira_number": "MSG-20033",
+        "title": "BIOS Update completes but is not updated in redfish/v1/Oem/Ami/InventoryData/Status",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20033"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "MSG-20583",
+        "title": "Falling to UEFI shell unexpectedly ",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20583"
+    },
+    {
+        "status": "Open",
+        "function": "Unknown",
+        "jira_number": "MSG-20080",
+        "title": "dmidecode unable to read system-serial-number",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20080"
+    },
+    {
+        "status": "Closed",
+        "function": "BMC+BIOS",
+        "jira_number": "MSG-20014",
+        "title": "Host boots but RF stays in 'Host in reboot' mode (Returns 503)",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20014"
+    },
+    {
+        "status": "Closed",
+        "function": "BIOS",
+        "jira_number": "BFGS-73110",
+        "title": "[Wistron-Server][Gaines] About AMI JIRA MSG-20014 Host boots but RF stays in 'Host in reboot' mode (Returns 503)",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-73110"
+    },
+    {
+        "status": "Open",
+        "function": "BMC+BIOS",
+        "jira_number": "BFGS-73326",
+        "title": "[Wistron-SVR] How to trigger the transition to Secure Boot 'Deployed Mode' using Redfish URI actions?",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-73326"
+    },
+    {
+        "status": "Open",
+        "function": "BMC+BIOS",
+        "jira_number": "MSG-20920",
+        "title": "BMCs on Nodes in same data hall that lose SerialNumber",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-20920"
+    }
+]
