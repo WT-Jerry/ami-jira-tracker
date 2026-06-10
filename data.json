@@ -98,7 +98,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-75191?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-74270",
         "title": "[Wistron-SVR][Gaines 1.5/2.0] The \"Remote BIOS Setup\" in the BMC page is not as expected.",
