@@ -1,6 +1,6 @@
 [
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "MSG-18814",
         "title": "BootOptions not taking into effect",
