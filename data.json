@@ -103,5 +103,12 @@
         "jira_number": "BFGS-74270",
         "title": "[Wistron-SVR][Gaines 1.5/2.0] The \"Remote BIOS Setup\" in the BMC page is not as expected.",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-74270"
+    },
+    {
+        "status": "Open",
+        "function": "BMC",
+        "jira_number": "MSG-21643",
+        "title": "[Wistron-MegaRAC] The \"Remote BIOS Setup\" in the BMC page is not as expected.",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21643"
     }
 ]
