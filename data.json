@@ -110,5 +110,12 @@
         "jira_number": "MSG-21643",
         "title": "[Wistron-MegaRAC] The \"Remote BIOS Setup\" in the BMC page is not as expected.",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21643"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-86297",
+        "title": "[Wistron-SVR] BlockSID on AMI BMC is not working",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86297"
     }
 ]
