@@ -223,6 +223,18 @@
     </div>
 
     <script>
+        // 增加 openEdit 函式
+        function openEdit(index) {
+            const issue = issues[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editStatus').value = issue.status;
+            document.getElementById('editFunction').value = issue.function || '';
+            document.getElementById('editJira').value = issue.jira_number;
+            document.getElementById('editTitle').value = issue.title;
+            document.getElementById('editLink').value = issue.link;
+            editModal.show();
+        }
+
         // GitHub API 配置
         const GITHUB_REPO = "WT-Jerry/ami-jira-tracker";
         const GITHUB_FILE = "data.json";
