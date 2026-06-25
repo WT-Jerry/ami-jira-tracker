@@ -124,5 +124,12 @@
         "jira_number": "BFGS-86354",
         "title": "[Wistron-SVR] Needs clarity for the customer queries (SMMU)",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86354"
+    },
+    {
+        "status": "Open",
+        "function": "BMC+BIOS",
+        "jira_number": "BFGS-86287",
+        "title": "[Wistron-SVR] SecureBoot Deployed mode via redfish",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
     }
 ]
