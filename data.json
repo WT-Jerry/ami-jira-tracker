@@ -112,7 +112,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21643"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-86297",
         "title": "[Wistron-SVR] BlockSID on AMI BMC is not working",
