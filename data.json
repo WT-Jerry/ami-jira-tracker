@@ -131,5 +131,12 @@
         "jira_number": "BFGS-86287",
         "title": "[Wistron-SVR] SecureBoot Deployed mode via redfish",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-105143",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] Does the BIOS utilize \"CryptoPkg\"? ",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-105143"
     }
 ]
