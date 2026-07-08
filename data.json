@@ -133,7 +133,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-105143",
         "title": "[Wistron-SVR][Gaines 1.5/2.0] Does the BIOS utilize \"CryptoPkg\"? ",
