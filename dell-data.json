@@ -7,7 +7,7 @@
         "link": "https://jira.gtie.dell.com/browse/JIT-392490"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "",
         "jira_number": "JIT-392489",
         "title": "[Gaines 2.0][Dell AMI BMC] BlockSID on AMI BMC is not working",
