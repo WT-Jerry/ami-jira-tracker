@@ -3,49 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMI JIRA Issue Tracker (Pro Edition)</title>
-    <!-- 引入 Bootstrap 5 CSS -->
+    <title>JIRA Issue Tracker | AMI & Dell</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 引入 Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        :root { --ami-red: #dc3545; --ami-green: #198754; }
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root {
+            --ami-red: #dc3545;
+            --ami-green: #198754;
+            --dell-bg: #0b0b0c;
+            --dell-panel: #16171a;
+            --dell-panel-2: #1e2024;
+            --dell-border: #2c2f36;
+            --dell-text: #f3f4f6;
+            --dell-muted: #9ca3af;
+            --dell-accent: #0076ce;
+            --dell-accent-2: #00a3e0;
+            --dell-open: #e53935;
+            --dell-closed: #2e7d32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
         .container { max-width: 1300px; }
         .card { border: none; border-radius: 12px; }
-        .bg-open { background-color: var(--ami-red) !important; color: white !important; }
-        .bg-closed { background-color: var(--ami-green) !important; color: white !important; }
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 2000;
+            display: none; justify-content: center; align-items: center; z-index: 2000;
         }
         .stat-card { transition: transform 0.2s; flex: 1; min-width: 100px; }
         .stat-card:hover { transform: translateY(-5px); }
-        .table thead th { background-color: #f8f9fa; border-top: none; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
-        .jira-code { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #0052cc; }
+        .jira-code { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+        .workspace-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .workspace-tabs .nav-btn {
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 0.45rem 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .workspace-tabs .nav-btn.active {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        /* ===== AMI Theme (light) ===== */
+        body.theme-ami {
+            background-color: #f4f7f6;
+            color: #212529;
+        }
+        body.theme-ami .loading-overlay { background: rgba(255,255,255,0.8); }
+        body.theme-ami .brand-title { color: #0d6efd; }
+        body.theme-ami .workspace-tabs .nav-btn {
+            background: #fff;
+            border-color: #dee2e6;
+            color: #495057;
+        }
+        body.theme-ami .workspace-tabs .nav-btn.active {
+            background: #0d6efd;
+            border-color: #0d6efd;
+            color: #fff;
+        }
+        body.theme-ami .card,
+        body.theme-ami .stat-card,
+        body.theme-ami .input-group-text,
+        body.theme-ami .form-control,
+        body.theme-ami .form-select {
+            background-color: #fff;
+            color: #212529;
+        }
+        body.theme-ami .table thead th {
+            background-color: #f8f9fa;
+            border-top: none;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        body.theme-ami .bg-open { background-color: var(--ami-red) !important; color: white !important; }
+        body.theme-ami .bg-closed { background-color: var(--ami-green) !important; color: white !important; }
+        body.theme-ami .jira-code { color: #0052cc; }
+        body.theme-ami .table a { color: #212529; }
+        body.theme-ami .muted-label { color: #6c757d; }
+
+        /* ===== Dell Theme (black) ===== */
+        body.theme-dell {
+            background: radial-gradient(circle at top, #14161a 0%, var(--dell-bg) 55%);
+            color: var(--dell-text);
+        }
+        body.theme-dell .loading-overlay { background: rgba(0,0,0,0.75); }
+        body.theme-dell .brand-title { color: var(--dell-accent-2); }
+        body.theme-dell .workspace-tabs .nav-btn {
+            background: var(--dell-panel);
+            border-color: var(--dell-border);
+            color: var(--dell-muted);
+        }
+        body.theme-dell .workspace-tabs .nav-btn.active {
+            background: linear-gradient(135deg, var(--dell-accent), var(--dell-accent-2));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(0,118,206,0.35);
+        }
+        body.theme-dell .card,
+        body.theme-dell .stat-card {
+            background: var(--dell-panel) !important;
+            color: var(--dell-text);
+            border: 1px solid var(--dell-border) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+        }
+        body.theme-dell .stat-card.border-start { border-left-width: 4px !important; }
+        body.theme-dell .muted-label,
+        body.theme-dell .text-muted,
+        body.theme-dell .form-label { color: var(--dell-muted) !important; }
+        body.theme-dell .form-control,
+        body.theme-dell .form-select,
+        body.theme-dell .input-group-text {
+            background: var(--dell-panel-2);
+            border-color: var(--dell-border);
+            color: var(--dell-text);
+        }
+        body.theme-dell .form-control::placeholder { color: #6b7280; }
+        body.theme-dell .form-control:focus,
+        body.theme-dell .form-select:focus {
+            background: var(--dell-panel-2);
+            border-color: var(--dell-accent);
+            color: var(--dell-text);
+            box-shadow: 0 0 0 0.2rem rgba(0,118,206,0.2);
+        }
+        body.theme-dell .btn-primary {
+            background: linear-gradient(135deg, var(--dell-accent), var(--dell-accent-2));
+            border: none;
+        }
+        body.theme-dell .btn-success {
+            background: #0f766e;
+            border-color: #0f766e;
+        }
+        body.theme-dell .btn-light,
+        body.theme-dell .btn-outline-secondary {
+            background: var(--dell-panel-2);
+            border-color: var(--dell-border);
+            color: var(--dell-text);
+        }
+        body.theme-dell .btn-light:hover,
+        body.theme-dell .btn-outline-secondary:hover {
+            background: #2a2d34;
+            color: #fff;
+        }
+        body.theme-dell .table {
+            color: var(--dell-text);
+            --bs-table-bg: transparent;
+            --bs-table-hover-bg: rgba(255,255,255,0.04);
+            --bs-table-striped-bg: transparent;
+        }
+        body.theme-dell .table thead th {
+            background: var(--dell-panel-2);
+            border-top: none;
+            border-bottom: 1px solid var(--dell-border);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            color: var(--dell-muted);
+        }
+        body.theme-dell .table td,
+        body.theme-dell .table th {
+            border-color: var(--dell-border);
+        }
+        body.theme-dell .bg-open { background-color: var(--dell-open) !important; color: white !important; }
+        body.theme-dell .bg-closed { background-color: var(--dell-closed) !important; color: white !important; }
+        body.theme-dell .jira-code { color: var(--dell-accent-2); }
+        body.theme-dell .table a { color: #e5e7eb; }
+        body.theme-dell .badge.bg-light {
+            background: #2a2d34 !important;
+            color: #e5e7eb !important;
+            border-color: var(--dell-border) !important;
+        }
+        body.theme-dell .modal-content {
+            background: var(--dell-panel);
+            color: var(--dell-text);
+            border: 1px solid var(--dell-border);
+        }
+        body.theme-dell .modal-header,
+        body.theme-dell .modal-footer {
+            border-color: var(--dell-border);
+        }
+        body.theme-dell .btn-close {
+            filter: invert(1) grayscale(100%);
+        }
+        body.theme-dell .btn-secondary {
+            background: #374151;
+            border-color: #374151;
+        }
 
         /* 手機版排版優化 */
         @media (max-width: 767.98px) {
             .stat-container { gap: 10px !important; }
             .stat-card { padding: 8px !important; }
             .stat-card .h4 { font-size: 1.1rem; }
-            
-            /* 將表格轉換為卡片式列表 */
             .responsive-table thead { display: none; }
-            .responsive-table tr { 
-                display: block; 
-                margin-bottom: 1rem; 
-                border: 1px solid #eee; 
-                border-radius: 12px; 
-                background: white;
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 12px;
                 padding: 10px;
+            }
+            body.theme-ami .responsive-table tr {
+                border: 1px solid #eee;
+                background: white;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
-            .responsive-table td { 
-                display: flex; 
-                justify-content: b; 
-                align-items: center; 
-                border: none; 
+            body.theme-dell .responsive-table tr {
+                border: 1px solid var(--dell-border);
+                background: var(--dell-panel);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            }
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: none;
                 padding: 5px 10px;
                 text-align: left;
             }
@@ -54,34 +234,49 @@
                 font-weight: bold;
                 width: 100px;
                 min-width: 100px;
-                color: #666;
                 font-size: 0.8rem;
             }
+            body.theme-ami .responsive-table td::before { color: #666; }
+            body.theme-dell .responsive-table td::before { color: var(--dell-muted); }
             .responsive-table td:last-child {
                 justify-content: flex-end;
-                border-top: 1px solid #eee;
                 margin-top: 5px;
                 padding-top: 10px;
             }
+            body.theme-ami .responsive-table td:last-child { border-top: 1px solid #eee; }
+            body.theme-dell .responsive-table td:last-child { border-top: 1px solid var(--dell-border); }
             .responsive-table td:last-child::before { display: none; }
-            
             .container { padding-left: 10px; padding-right: 10px; }
             h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
-<body class="container mt-3 mt-md-4">
-    <!-- 讀取中遮罩 -->
+<body class="container mt-3 mt-md-4 theme-ami">
     <div id="loading" class="loading-overlay">
         <div class="text-center">
             <div class="spinner-border text-primary" role="status"></div>
-            <div class="mt-2 fw-bold text-primary">雲端同步中...</div>
+            <div class="mt-2 fw-bold loading-text">雲端同步中...</div>
         </div>
+    </div>
+
+    <!-- 分頁切換 -->
+    <div class="workspace-tabs">
+        <button type="button" class="nav-btn active" id="tabAmi" onclick="switchWorkspace('ami')">
+            <i class="bi bi-building"></i> AMI Tracker
+        </button>
+        <button type="button" class="nav-btn" id="tabDell" onclick="switchWorkspace('dell')">
+            <i class="bi bi-hdd-network"></i> Dell Tracker
+        </button>
     </div>
 
     <div class="row align-items-center mb-4">
         <div class="col-md-6 mb-3 mb-md-0">
-            <h2 class="fw-bold m-0"><i class="bi bi-clipboard-data-history text-primary"></i> AMI JIRA Tracker <small class="text-muted fs-6">v2.3</small></h2>
+            <h2 class="fw-bold m-0">
+                <i class="bi bi-clipboard-data-history brand-title" id="pageIcon"></i>
+                <span id="pageTitle">AMI JIRA Tracker</span>
+                <small class="text-muted fs-6" id="pageVersion">v3.0</small>
+            </h2>
+            <div class="small muted-label mt-1" id="pageSubtitle">AMI 案件追蹤 · GitHub data.json</div>
         </div>
         <div class="col-md-6 text-md-end">
             <input type="password" id="patInput" class="form-control form-control-sm d-inline-block" style="width: 200px;" placeholder="Enter GitHub PAT">
@@ -89,55 +284,59 @@
         </div>
         <div class="col-12 mt-3">
             <div class="d-flex stat-container gap-2 gap-md-3">
-                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-danger border-4 text-center text-md-start">
-                    <div class="text-muted" style="font-size: 0.7rem;">OPEN</div>
+                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-danger border-4 text-center text-md-start">
+                    <div class="muted-label" style="font-size: 0.7rem;">OPEN</div>
                     <div id="openCount" class="h4 fw-bold m-0 text-danger">0</div>
                 </div>
-                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-success border-4 text-center text-md-start">
-                    <div class="text-muted" style="font-size: 0.7rem;">CLOSED</div>
+                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-success border-4 text-center text-md-start">
+                    <div class="muted-label" style="font-size: 0.7rem;">CLOSED</div>
                     <div id="closedCount" class="h4 fw-bold m-0 text-success">0</div>
                 </div>
-                <div class="stat-card p-2 px-md-3 bg-white shadow-sm rounded-3 border-start border-primary border-4 text-center text-md-start">
-                    <div class="text-muted" style="font-size: 0.7rem;">TOTAL</div>
+                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-primary border-4 text-center text-md-start">
+                    <div class="muted-label" style="font-size: 0.7rem;">TOTAL</div>
                     <div id="totalCount" class="h4 fw-bold m-0 text-primary">0</div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- 新增案件表單 -->
     <div class="card shadow-sm mb-4">
         <div class="card-body p-3 p-md-4">
             <h5 class="card-title mb-3 fw-bold d-md-none small">新增案件</h5>
             <div class="row g-2 g-md-3">
                 <div class="col-6 col-md-2">
-                    <label class="form-label fw-bold small text-muted">Status</label>
-                    <select id="statusInput" class="form-select border-2 form-select-sm form-select-md-normal">
+                    <label class="form-label fw-bold small muted-label">Status</label>
+                    <select id="statusInput" class="form-select border-2 form-select-sm">
                         <option value="Open">🔴 Open</option>
                         <option value="Closed">🟢 Closed</option>
                     </select>
                 </div>
                 <div class="col-6 col-md-2">
-                    <label class="form-label fw-bold small text-muted">Function</label>
-                    <input type="text" id="functionInput" class="form-control form-control-sm form-control-md-normal" list="funcList" placeholder="選擇...">
+                    <label class="form-label fw-bold small muted-label">Function</label>
+                    <input type="text" id="functionInput" class="form-control form-control-sm" list="funcList" placeholder="選擇...">
                     <datalist id="funcList">
-                        <option value="BIOS"><option value="BMC"><option value="Unknown">
+                        <option value="BIOS">
+                        <option value="BMC">
+                        <option value="Firmware">
+                        <option value="Hardware">
+                        <option value="Unknown">
                     </datalist>
                 </div>
                 <div class="col-12 col-md-2">
-                    <label class="form-label fw-bold small text-muted">Jira Number</label>
-                    <input type="text" id="jiraInput" class="form-control form-control-sm form-control-md-normal" placeholder="MSG-XXXXXX" required>
+                    <label class="form-label fw-bold small muted-label">Jira Number</label>
+                    <input type="text" id="jiraInput" class="form-control form-control-sm" placeholder="MSG-XXXXXX / DELL-XXXX" required>
                 </div>
                 <div class="col-12 col-md-3">
-                    <label class="form-label fw-bold small text-muted">Issue Title</label>
-                    <input type="text" id="titleInput" class="form-control form-control-sm form-control-md-normal" placeholder="描述標題..." required>
+                    <label class="form-label fw-bold small muted-label">Issue Title</label>
+                    <input type="text" id="titleInput" class="form-control form-control-sm" placeholder="描述標題..." required>
                 </div>
                 <div class="col-12 col-md-3">
-                    <label class="form-label fw-bold small text-muted">Issue Link</label>
-                    <input type="url" id="linkInput" class="form-control form-control-sm form-control-md-normal" placeholder="https://..." required>
+                    <label class="form-label fw-bold small muted-label">Issue Link</label>
+                    <input type="url" id="linkInput" class="form-control form-control-sm" placeholder="https://..." required>
                 </div>
                 <div class="col-12 text-end mt-3">
-                    <button onclick="addIssue()" class="btn btn-primary w-100 w-md-auto px-5 fw-bold shadow-sm btn-sm btn-md-normal">
+                    <button onclick="addIssue()" class="btn btn-primary w-100 w-md-auto px-5 fw-bold shadow-sm btn-sm">
                         <i class="bi bi-plus-lg"></i> 新增案件
                     </button>
                 </div>
@@ -145,26 +344,26 @@
         </div>
     </div>
 
-        <!-- 搜尋與過濾 -->
+    <!-- 搜尋與過濾 -->
     <div class="row mb-3 align-items-center g-2">
         <div class="col-8 col-md-6">
             <div class="input-group shadow-sm">
-                <span class="input-group-text bg-white border-end-0 px-2"><i class="bi bi-search text-muted small"></i></span>
-                <input type="text" id="searchInput" class="form-control border-start-0 form-control-sm form-control-md-normal" placeholder="快速搜尋..." oninput="renderIssues()">
+                <span class="input-group-text border-end-0 px-2"><i class="bi bi-search small"></i></span>
+                <input type="text" id="searchInput" class="form-control border-start-0 form-control-sm" placeholder="快速搜尋..." oninput="renderIssues()">
             </div>
         </div>
         <div class="col-4 col-md-6 text-end">
-            <button class="btn btn-success shadow-sm border btn-sm btn-md-normal me-2" onclick="exportToExcel()">
+            <button class="btn btn-success shadow-sm border btn-sm me-2" onclick="exportToExcel()">
                 <i class="bi bi-file-earmark-spreadsheet"></i> <span class="d-none d-md-inline">匯出 Excel</span>
             </button>
-            <button class="btn btn-light shadow-sm border btn-sm btn-md-normal" onclick="fetchIssues()">
+            <button class="btn btn-light shadow-sm border btn-sm" onclick="fetchIssues()">
                 <i class="bi bi-arrow-clockwise"></i> <span class="d-none d-md-inline">刷新雲端</span>
             </button>
         </div>
     </div>
 
     <!-- Issue 列表表格 -->
-    <div class="card shadow-sm border-0 bg-transparent bg-md-white">
+    <div class="card shadow-sm border-0 bg-transparent">
         <div class="card-body p-0 overflow-hidden">
             <table class="table table-hover align-middle mb-0 responsive-table">
                 <thead>
@@ -183,7 +382,7 @@
         </div>
     </div>
 
-    <!-- 編輯彈出視窗 (Modal) -->
+    <!-- 編輯彈出視窗 -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -194,26 +393,26 @@
           <div class="modal-body">
             <input type="hidden" id="editIndex">
             <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Status</label>
+                <label class="form-label fw-bold small muted-label">Status</label>
                 <select id="editStatus" class="form-select">
                     <option value="Open">Open</option>
                     <option value="Closed">Closed</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Function</label>
+                <label class="form-label fw-bold small muted-label">Function</label>
                 <input type="text" id="editFunction" class="form-control" list="funcList">
             </div>
             <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Jira Number</label>
+                <label class="form-label fw-bold small muted-label">Jira Number</label>
                 <input type="text" id="editJira" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Issue Title</label>
+                <label class="form-label fw-bold small muted-label">Issue Title</label>
                 <input type="text" id="editTitle" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Issue Link</label>
+                <label class="form-label fw-bold small muted-label">Issue Link</label>
                 <input type="url" id="editLink" class="form-control" required>
             </div>
           </div>
@@ -226,7 +425,41 @@
     </div>
 
     <script>
-        // 增加 openEdit 函式
+        const GITHUB_REPO = "WT-Jerry/ami-jira-tracker";
+        const WORKSPACES = {
+            ami: {
+                id: "ami",
+                name: "AMI JIRA Tracker",
+                subtitle: "AMI 案件追蹤 · GitHub data.json",
+                file: "data.json",
+                theme: "theme-ami",
+                exportName: "AMI_JIRA_Report.csv",
+                tabId: "tabAmi"
+            },
+            dell: {
+                id: "dell",
+                name: "Dell JIRA Tracker",
+                subtitle: "Dell 案件追蹤 · GitHub dell-data.json · Black theme",
+                file: "dell-data.json",
+                theme: "theme-dell",
+                exportName: "Dell_JIRA_Report.csv",
+                tabId: "tabDell"
+            }
+        };
+
+        let currentWorkspace = "ami";
+        let issues = [];
+        let editModal;
+        let fileSha = "";
+
+        function getWorkspace() {
+            return WORKSPACES[currentWorkspace];
+        }
+
+        function getApiUrl() {
+            return `https://api.github.com/repos/${GITHUB_REPO}/contents/${getWorkspace().file}`;
+        }
+
         function openEdit(index) {
             const issue = issues[index];
             document.getElementById('editIndex').value = index;
@@ -238,22 +471,47 @@
             editModal.show();
         }
 
-        // GitHub API 配置
-        const GITHUB_REPO = "WT-Jerry/ami-jira-tracker";
-        const GITHUB_FILE = "data.json";
-        const API_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
-        
-        let issues = [];
-        let editModal;
-        let fileSha = ""; // 需要用來更新檔案
-
         window.onload = () => {
             editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            // 自動載入存好的 PAT
             const savedPAT = localStorage.getItem('github_pat');
-            if(savedPAT) document.getElementById('patInput').value = savedPAT;
-            fetchIssues();
+            if (savedPAT) document.getElementById('patInput').value = savedPAT;
+
+            const savedWorkspace = localStorage.getItem('jira_workspace');
+            if (savedWorkspace && WORKSPACES[savedWorkspace]) {
+                switchWorkspace(savedWorkspace, false);
+            } else {
+                applyWorkspaceUI();
+                fetchIssues();
+            }
         };
+
+        function switchWorkspace(id, reload = true) {
+            if (!WORKSPACES[id]) return;
+            currentWorkspace = id;
+            localStorage.setItem('jira_workspace', id);
+            issues = [];
+            fileSha = "";
+            applyWorkspaceUI();
+            if (reload) fetchIssues();
+        }
+
+        function applyWorkspaceUI() {
+            const ws = getWorkspace();
+            document.body.classList.remove('theme-ami', 'theme-dell');
+            document.body.classList.add(ws.theme);
+            document.getElementById('pageTitle').innerText = ws.name;
+            document.getElementById('pageSubtitle').innerText = ws.subtitle;
+            document.title = `${ws.name} | AMI & Dell`;
+            document.getElementById('tabAmi').classList.toggle('active', ws.id === 'ami');
+            document.getElementById('tabDell').classList.toggle('active', ws.id === 'dell');
+            document.querySelector('.loading-text').classList.toggle('text-info', ws.id === 'dell');
+            document.querySelector('.loading-text').classList.toggle('text-primary', ws.id === 'ami');
+            document.getElementById('issueList').innerHTML =
+                `<tr><td colspan="5" class="text-center py-5">讀取中...</td></tr>`;
+            document.getElementById('openCount').innerText = '0';
+            document.getElementById('closedCount').innerText = '0';
+            document.getElementById('totalCount').innerText = '0';
+        }
 
         function savePAT() {
             const pat = document.getElementById('patInput').value;
@@ -263,94 +521,151 @@
 
         async function getHeaders() {
             const pat = localStorage.getItem('github_pat');
-            if(!pat) throw new Error("請先輸入並儲存 GitHub PAT");
+            if (!pat) throw new Error("請先輸入並儲存 GitHub PAT");
             return {
                 "Authorization": `token ${pat}`,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
             };
         }
 
-        // 從 GitHub 讀取資料
+        // 安全的 base64 編碼（支援中文）
+        function encodeContent(obj) {
+            const json = JSON.stringify(obj, null, 4);
+            return btoa(unescape(encodeURIComponent(json)));
+        }
+
+        function decodeContent(b64) {
+            const decoded = decodeURIComponent(escape(atob(b64)));
+            return JSON.parse(decoded);
+        }
+
         async function fetchIssues() {
             showLoading(true);
             try {
-                const response = await fetch(API_URL, {
-                    headers: { ...await getHeaders(), "Accept": "application/vnd.github.v3+json" }
-                });
+                const response = await fetch(getApiUrl(), { headers: await getHeaders() });
+                if (response.status === 404) {
+                    // 首次建立 Dell 檔案
+                    issues = [];
+                    fileSha = "";
+                    await createGitHubFile([]);
+                    renderIssues();
+                    showLoading(false);
+                    return;
+                }
+                if (!response.ok) throw new Error(`讀取失敗 (${response.status})`);
                 const data = await response.json();
                 fileSha = data.sha;
-                issues = JSON.parse(atob(data.content));
+                issues = decodeContent(data.content);
+                if (!Array.isArray(issues)) issues = [];
                 renderIssues();
             } catch (error) {
                 console.error(error);
-                alert("GitHub 資料讀取失敗，請確認 PAT 權限是否正確，或檢查 Console 錯誤訊息");
+                alert("GitHub 資料讀取失敗，請確認 PAT 權限是否正確，或檢查 Console 錯誤訊息\n" + error.message);
             }
             showLoading(false);
         }
 
-        // 通用更新 GitHub 檔案
+        async function createGitHubFile(newContent) {
+            const response = await fetch(getApiUrl(), {
+                method: "PUT",
+                headers: await getHeaders(),
+                body: JSON.stringify({
+                    message: `Create ${getWorkspace().file}`,
+                    content: encodeContent(newContent)
+                })
+            });
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error("建立檔案失敗: " + err);
+            }
+            const result = await response.json();
+            fileSha = result.content.sha;
+        }
+
         async function updateGitHubFile(newContent) {
             showLoading(true);
             try {
-                const response = await fetch(API_URL, {
+                // 寫入前重新抓一次 SHA，降低 409 衝突
+                const head = await fetch(getApiUrl(), { headers: await getHeaders() });
+                if (head.ok) {
+                    const headData = await head.json();
+                    fileSha = headData.sha;
+                } else if (head.status === 404) {
+                    await createGitHubFile(newContent);
+                    issues = newContent;
+                    renderIssues();
+                    showLoading(false);
+                    return;
+                }
+
+                const response = await fetch(getApiUrl(), {
                     method: "PUT",
                     headers: await getHeaders(),
                     body: JSON.stringify({
-                        message: "Update tracker data",
-                        content: btoa(JSON.stringify(newContent, null, 4)),
+                        message: `Update ${getWorkspace().file}`,
+                        content: encodeContent(newContent),
                         sha: fileSha
                     })
                 });
-                if(!response.ok) throw new Error("更新失敗");
+                if (!response.ok) {
+                    const err = await response.text();
+                    throw new Error("更新失敗: " + err);
+                }
                 const result = await response.json();
                 fileSha = result.content.sha;
-                await fetchIssues();
+                issues = newContent;
+                renderIssues();
             } catch (e) {
+                console.error(e);
                 alert("更新失敗：" + e.message);
             }
             showLoading(false);
         }
 
-        // 渲染列表與統計數據
         function renderIssues() {
             const list = document.getElementById('issueList');
             const search = document.getElementById('searchInput').value.toLowerCase();
             list.innerHTML = '';
             let stats = { Open: 0, Closed: 0, Total: 0 };
 
+            // 最新在上
             issues.slice().reverse().forEach((issue, index) => {
-                // 計算反轉後的原始陣列索引
                 const originalIndex = issues.length - 1 - index;
                 const searchableText = `${issue.jira_number} ${issue.title} ${issue.function}`.toLowerCase();
-                if (searchableText.includes(search)) {
-                    stats.Total++;
-                    stats[issue.status]++;
-                    
-                    list.innerHTML += `
-                        <tr>
-                            <td class="ps-md-4" data-label="Status">
-                                <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
-                                    <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
-                                    <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                                </select>
-                            </td>
-                            <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
-                            <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
-                            <td data-label="Title"><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold text-dark">${issue.title}</a></td>
-                            <td class="text-center pe-md-4">
-                                <button onclick="openEdit(${originalIndex})" class="btn btn-link text-primary p-0 me-3"><i class="bi bi-pencil-square fs-5"></i></button>
-                                <button onclick="deleteIssue(${originalIndex})" class="btn btn-link text-danger p-0"><i class="bi bi-trash3 fs-5"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                }
+                if (!searchableText.includes(search)) return;
+
+                stats.Total++;
+                stats[issue.status] = (stats[issue.status] || 0) + 1;
+
+                list.innerHTML += `
+                    <tr>
+                        <td class="ps-md-4" data-label="Status">
+                            <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
+                                <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
+                                <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                            </select>
+                        </td>
+                        <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
+                        <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
+                        <td data-label="Title"><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold">${issue.title}</a></td>
+                        <td class="text-center pe-md-4">
+                            <button onclick="openEdit(${originalIndex})" class="btn btn-link text-primary p-0 me-3"><i class="bi bi-pencil-square fs-5"></i></button>
+                            <button onclick="deleteIssue(${originalIndex})" class="btn btn-link text-danger p-0"><i class="bi bi-trash3 fs-5"></i></button>
+                        </td>
+                    </tr>
+                `;
             });
-            document.getElementById('openCount').innerText = stats.Open;
-            document.getElementById('closedCount').innerText = stats.Closed;
-            document.getElementById('totalCount').innerText = stats.Total;
+
+            if (!list.innerHTML) {
+                list.innerHTML = `<tr><td colspan="5" class="text-center py-5 muted-label">目前沒有符合條件的案件</td></tr>`;
+            }
+
+            document.getElementById('openCount').innerText = stats.Open || 0;
+            document.getElementById('closedCount').innerText = stats.Closed || 0;
+            document.getElementById('totalCount').innerText = stats.Total || 0;
         }
 
-        // 新增案件
         async function addIssue() {
             const n = {
                 status: document.getElementById('statusInput').value,
@@ -359,17 +674,19 @@
                 title: document.getElementById('titleInput').value,
                 link: document.getElementById('linkInput').value
             };
-            if(!n.jira_number || !n.title) return alert('請填寫必填欄位');
-            issues.push(n);
-            await updateGitHubFile(issues);
-            // 清空輸入
-            document.querySelectorAll('input, select').forEach(i => { if(i.id.includes('Input')) i.value = ''; });
+            if (!n.jira_number || !n.title) return alert('請填寫必填欄位');
+            const next = [...issues, n];
+            await updateGitHubFile(next);
+            ['functionInput', 'jiraInput', 'titleInput', 'linkInput'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('statusInput').value = 'Open';
         }
 
-        // 儲存編輯變更
         async function saveEdit() {
-            const index = document.getElementById('editIndex').value;
-            issues[index] = {
+            const index = Number(document.getElementById('editIndex').value);
+            const next = [...issues];
+            next[index] = {
                 status: document.getElementById('editStatus').value,
                 function: document.getElementById('editFunction').value,
                 jira_number: document.getElementById('editJira').value,
@@ -377,39 +694,40 @@
                 link: document.getElementById('editLink').value
             };
             editModal.hide();
-            await updateGitHubFile(issues);
+            await updateGitHubFile(next);
         }
 
-        // 快速切換狀態
         async function updateStatus(index, newStatus) {
-            issues[index].status = newStatus;
-            await updateGitHubFile(issues);
+            const next = [...issues];
+            next[index] = { ...next[index], status: newStatus };
+            await updateGitHubFile(next);
         }
 
-        // 刪除案件
         async function deleteIssue(index) {
-            if(!confirm('確定刪除？')) return;
-            issues.splice(index, 1);
-            await updateGitHubFile(issues);
+            if (!confirm('確定刪除？')) return;
+            const next = issues.filter((_, i) => i !== index);
+            await updateGitHubFile(next);
         }
 
-        function showLoading(s) { document.getElementById('loading').style.display = s ? 'flex' : 'none'; }
-
-        // 匯出 Excel 功能
         function exportToExcel() {
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
             csvContent += "Status,Function,Jira Number,Issue Title,Link\n";
-            issues.forEach(issue => {
-                let row = `"${issue.status}","${issue.function || ''}","${issue.jira_number}","${issue.title}","${issue.link}"\n`;
+            // 匯出也以最新在前
+            issues.slice().reverse().forEach(issue => {
+                const row = `"${issue.status}","${issue.function || ''}","${issue.jira_number}","${issue.title}","${issue.link}"\n`;
                 csvContent += row;
             });
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "AMI_JIRA_Report.csv");
+            link.setAttribute("download", getWorkspace().exportName);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function showLoading(s) {
+            document.getElementById('loading').style.display = s ? 'flex' : 'none';
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
