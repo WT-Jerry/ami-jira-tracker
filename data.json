@@ -112,14 +112,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21643"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-86297",
         "title": "[Wistron-SVR] BlockSID on AMI BMC is not working",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86297"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-86354",
         "title": "[Wistron-SVR] Needs clarity for the customer queries (SMMU)",
@@ -131,5 +131,12 @@
         "jira_number": "BFGS-86287",
         "title": "[Wistron-SVR] SecureBoot Deployed mode via redfish",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
+    },
+    {
+        "status": "Closed",
+        "function": "BIOS",
+        "jira_number": "BFGS-105143",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] Does the BIOS utilize \"CryptoPkg\"? ",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-105143"
     }
 ]
