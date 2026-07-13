@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "status": "Open",
+        "function": "BIOS+BMC",
+        "jira_number": "JIT-392490",
+        "title": "[Gaines 2.0][Dell AMI BMC] SecureBoot Enrollment over Redfish isn't working",
+        "link": "https://jira.gtie.dell.com/browse/JIT-392490"
+    }
+]
