@@ -138,5 +138,12 @@
         "jira_number": "BFGS-105143",
         "title": "[Wistron-SVR][Gaines 1.5/2.0] Does the BIOS utilize \"CryptoPkg\"? ",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-105143"
+    },
+    {
+        "status": "Open",
+        "function": "BMC+BIOS",
+        "jira_number": "MSG-21408",
+        "title": "BIOS Password change",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21408"
     }
 ]
