@@ -28,7 +28,7 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-69373?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "Unknown",
         "jira_number": "MSG-20033",
         "title": "BIOS Update completes but is not updated in redfish/v1/Oem/Ami/InventoryData/Status",
