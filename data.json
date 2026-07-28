@@ -130,7 +130,9 @@
         "function": "BMC+BIOS",
         "jira_number": "BFGS-86287",
         "title": "[Wistron-SVR] SecureBoot Deployed mode via redfish",
-        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287",
+        "dell_jira_number": "JIT-392490",
+        "dell_link": "https://jira.gtie.dell.com/browse/JIT-392490"
     },
     {
         "status": "Closed",
