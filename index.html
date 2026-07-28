@@ -250,45 +250,60 @@
             border: none !important;
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
         }
-        /* Status 下拉：改用可讀配色（不用白字彩底 select，避免 option 被洗掉） */
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 10px;
-            padding: 0;
+        /* Status：顯眼紅/綠膠囊 + 自訂下拉（避免原生 option 洗色） */
+        .status-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .status-pill-btn {
             min-width: 108px;
-            border: 1px solid transparent;
-            overflow: hidden;
-        }
-        .status-pill.is-open {
-            background: rgba(239, 68, 68, 0.10);
-            border-color: rgba(239, 68, 68, 0.35);
-        }
-        .status-pill.is-closed {
-            background: rgba(16, 185, 129, 0.10);
-            border-color: rgba(16, 185, 129, 0.35);
-        }
-        select.status-select {
-            min-width: 108px;
-            background: transparent !important;
             border: none !important;
-            box-shadow: none !important;
+            border-radius: 999px !important;
+            font-weight: 700 !important;
+            font-size: 0.85rem !important;
+            padding: 0.35rem 0.85rem !important;
+            color: #fff !important;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15), 0 4px 12px rgba(15,23,42,0.12);
+        }
+        .status-pill-btn.bg-open {
+            background: linear-gradient(135deg, #ef4444, #f97316) !important;
+        }
+        .status-pill-btn.bg-closed {
+            background: linear-gradient(135deg, #10b981, #14b8a6) !important;
+        }
+        .status-pill-btn::after {
+            margin-left: 0.45rem;
+        }
+        .status-menu {
+            min-width: 120px;
+            padding: 0.35rem;
+            border-radius: 12px !important;
+            border: 1px solid rgba(148,163,184,0.35) !important;
+            box-shadow: 0 12px 28px rgba(15,23,42,0.16) !important;
+        }
+        .status-menu .dropdown-item {
+            border-radius: 8px;
             font-weight: 700;
-            cursor: pointer;
-            appearance: auto;
-            -webkit-appearance: menulist;
-            color-scheme: light;
+            padding: 0.45rem 0.7rem;
         }
-        select.status-select:focus {
-            box-shadow: none !important;
-            outline: none;
+        .status-menu .dropdown-item.status-opt-open {
+            color: #b91c1c;
         }
-        .status-pill.is-open select.status-select { color: #b91c1c !important; }
-        .status-pill.is-closed select.status-select { color: #047857 !important; }
-        select.status-select option {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
-            font-weight: 600;
+        .status-menu .dropdown-item.status-opt-open:hover,
+        .status-menu .dropdown-item.status-opt-open:focus {
+            background: rgba(239, 68, 68, 0.12);
+            color: #991b1b;
+        }
+        .status-menu .dropdown-item.status-opt-closed {
+            color: #047857;
+        }
+        .status-menu .dropdown-item.status-opt-closed:hover,
+        .status-menu .dropdown-item.status-opt-closed:focus {
+            background: rgba(16, 185, 129, 0.12);
+            color: #065f46;
+        }
+        .status-menu .dropdown-item.active-opt {
+            outline: 1px solid rgba(148,163,184,0.35);
         }
 
         /* ===== AMI Theme (professional light tech) ===== */
@@ -343,17 +358,8 @@
         }
         body.theme-ami .bg-open { background: linear-gradient(135deg, #ef4444, #f97316) !important; color: white !important; }
         body.theme-ami .bg-closed { background: linear-gradient(135deg, #10b981, #14b8a6) !important; color: white !important; }
-        body.theme-ami .status-pill.is-open {
-            background: rgba(239, 68, 68, 0.10);
-            border-color: rgba(239, 68, 68, 0.35);
-        }
-        body.theme-ami .status-pill.is-closed {
-            background: rgba(16, 185, 129, 0.12);
-            border-color: rgba(16, 185, 129, 0.35);
-        }
-        body.theme-ami select.status-select option {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
+        body.theme-ami .status-menu {
+            background: #fff !important;
         }
         body.theme-ami .jira-code { color: #1d4ed8; }
         body.theme-ami .dell-jira-link {
@@ -480,22 +486,21 @@
         }
         body.theme-dell .bg-open { background: linear-gradient(135deg, #f43f5e, #fb7185) !important; color: white !important; }
         body.theme-dell .bg-closed { background: linear-gradient(135deg, #16a34a, #22c55e) !important; color: white !important; }
-        body.theme-dell .status-pill.is-open {
-            background: rgba(244, 63, 94, 0.16);
-            border-color: rgba(251, 113, 133, 0.4);
+        body.theme-dell .status-pill-btn.bg-open {
+            background: linear-gradient(135deg, #f43f5e, #fb7185) !important;
         }
-        body.theme-dell .status-pill.is-closed {
-            background: rgba(34, 197, 94, 0.14);
-            border-color: rgba(74, 222, 128, 0.35);
+        body.theme-dell .status-pill-btn.bg-closed {
+            background: linear-gradient(135deg, #16a34a, #22c55e) !important;
         }
-        body.theme-dell .status-pill.is-open select.status-select { color: #fda4af !important; }
-        body.theme-dell .status-pill.is-closed select.status-select { color: #86efac !important; }
-        body.theme-dell select.status-select {
-            color-scheme: dark;
+        body.theme-dell .status-menu {
+            background: #0f172a !important;
+            border-color: rgba(34,211,238,0.2) !important;
         }
-        body.theme-dell select.status-select option {
-            background-color: #0f172a !important;
-            color: #f8fafc !important;
+        body.theme-dell .status-menu .dropdown-item.status-opt-open { color: #fda4af; }
+        body.theme-dell .status-menu .dropdown-item.status-opt-closed { color: #86efac; }
+        body.theme-dell .status-menu .dropdown-item:hover,
+        body.theme-dell .status-menu .dropdown-item:focus {
+            background: rgba(148,163,184,0.12);
         }
         body.theme-dell .jira-code { color: #67e8f9; }
         body.theme-dell .table a { color: #e2e8f0; }
@@ -1040,11 +1045,18 @@
                     <tr>
                         <td class="ps-md-4" data-label="Index"><span class="fw-bold muted-label">#${originalIndex + 1}</span></td>
                         <td data-label="Status">
-                            <div class="status-pill ${issue.status === 'Open' ? 'is-open' : 'is-closed'}">
-                                <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm status-select px-2">
-                                    <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
-                                    <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                                </select>
+                            <div class="dropdown status-dropdown">
+                                <button class="btn status-pill-btn dropdown-toggle ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ${issue.status}
+                                </button>
+                                <ul class="dropdown-menu status-menu">
+                                    <li>
+                                        <button type="button" class="dropdown-item status-opt-open ${issue.status === 'Open' ? 'active-opt' : ''}" onclick="updateStatus(${originalIndex}, 'Open')">Open</button>
+                                    </li>
+                                    <li>
+                                        <button type="button" class="dropdown-item status-opt-closed ${issue.status === 'Closed' ? 'active-opt' : ''}" onclick="updateStatus(${originalIndex}, 'Closed')">Closed</button>
+                                    </li>
+                                </ul>
                             </div>
                         </td>
                         <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
