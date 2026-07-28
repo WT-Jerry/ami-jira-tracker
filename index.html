@@ -335,6 +335,14 @@
                     <label class="form-label fw-bold small muted-label">Issue Link</label>
                     <input type="url" id="linkInput" class="form-control form-control-sm" placeholder="https://..." required>
                 </div>
+                <div class="col-12 col-md-3 ami-only-field">
+                    <label class="form-label fw-bold small muted-label">Dell JIRA Number</label>
+                    <input type="text" id="dellJiraInput" class="form-control form-control-sm" placeholder="DELL-XXXX（選填）">
+                </div>
+                <div class="col-12 col-md-3 ami-only-field">
+                    <label class="form-label fw-bold small muted-label">Dell Issue Link</label>
+                    <input type="url" id="dellLinkInput" class="form-control form-control-sm" placeholder="https://...（選填）">
+                </div>
                 <div class="col-12 text-end mt-3">
                     <button onclick="addIssue()" class="btn btn-primary w-100 w-md-auto px-5 fw-bold shadow-sm btn-sm">
                         <i class="bi bi-plus-lg"></i> 新增案件
@@ -368,15 +376,16 @@
             <table class="table table-hover align-middle mb-0 responsive-table">
                 <thead>
                     <tr>
-                        <th width="140" class="ps-4">Status</th>
-                        <th width="140">Function</th>
-                        <th width="160">Jira Number</th>
+                        <th width="120" class="ps-4">Status</th>
+                        <th width="110">Function</th>
+                        <th width="140">Jira Number</th>
+                        <th width="150" class="ami-only-col">Dell JIRA Number</th>
                         <th>Issue Title</th>
-                        <th width="150" class="text-center pe-4">Action</th>
+                        <th width="120" class="text-center pe-4">Action</th>
                     </tr>
                 </thead>
                 <tbody id="issueList" class="border-top-0">
-                    <tr><td colspan="5" class="text-center py-5">讀取中...</td></tr>
+                    <tr><td colspan="6" class="text-center py-5">讀取中...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -414,6 +423,14 @@
             <div class="mb-3">
                 <label class="form-label fw-bold small muted-label">Issue Link</label>
                 <input type="url" id="editLink" class="form-control" required>
+            </div>
+            <div class="mb-3 ami-only-field">
+                <label class="form-label fw-bold small muted-label">Dell JIRA Number</label>
+                <input type="text" id="editDellJira" class="form-control" placeholder="DELL-XXXX（選填）">
+            </div>
+            <div class="mb-3 ami-only-field">
+                <label class="form-label fw-bold small muted-label">Dell Issue Link</label>
+                <input type="url" id="editDellLink" class="form-control" placeholder="https://...（選填）">
             </div>
           </div>
           <div class="modal-footer">
@@ -468,7 +485,27 @@
             document.getElementById('editJira').value = issue.jira_number;
             document.getElementById('editTitle').value = issue.title;
             document.getElementById('editLink').value = issue.link;
+            document.getElementById('editDellJira').value = issue.dell_jira_number || '';
+            document.getElementById('editDellLink').value = issue.dell_link || '';
             editModal.show();
+        }
+
+        function isAmiWorkspace() {
+            return currentWorkspace === 'ami';
+        }
+
+        function formatDellJiraCell(issue) {
+            const num = (issue.dell_jira_number || '').trim();
+            const url = (issue.dell_link || '').trim();
+            if (!num) return '';
+            if (url) {
+                return `<a href="${url}" target="_blank" class="text-decoration-none fw-semibold jira-code">${num}</a>`;
+            }
+            return `<span class="jira-code">${num}</span>`;
+        }
+
+        function getColspan() {
+            return isAmiWorkspace() ? 6 : 5;
         }
 
         window.onload = () => {
@@ -506,8 +543,14 @@
             document.getElementById('tabDell').classList.toggle('active', ws.id === 'dell');
             document.querySelector('.loading-text').classList.toggle('text-info', ws.id === 'dell');
             document.querySelector('.loading-text').classList.toggle('text-primary', ws.id === 'ami');
+
+            // AMI 專屬欄位：Dell JIRA Number / Dell Link
+            document.querySelectorAll('.ami-only-field, .ami-only-col').forEach(el => {
+                el.style.display = ws.id === 'ami' ? '' : 'none';
+            });
+
             document.getElementById('issueList').innerHTML =
-                `<tr><td colspan="5" class="text-center py-5">讀取中...</td></tr>`;
+                `<tr><td colspan="${getColspan()}" class="text-center py-5">讀取中...</td></tr>`;
             document.getElementById('openCount').innerText = '0';
             document.getElementById('closedCount').innerText = '0';
             document.getElementById('totalCount').innerText = '0';
@@ -628,15 +671,20 @@
             const search = document.getElementById('searchInput').value.toLowerCase();
             list.innerHTML = '';
             let stats = { Open: 0, Closed: 0, Total: 0 };
+            const ami = isAmiWorkspace();
 
             // 最新在上
             issues.slice().reverse().forEach((issue, index) => {
                 const originalIndex = issues.length - 1 - index;
-                const searchableText = `${issue.jira_number} ${issue.title} ${issue.function}`.toLowerCase();
+                const searchableText = `${issue.jira_number} ${issue.title} ${issue.function} ${issue.dell_jira_number || ''}`.toLowerCase();
                 if (!searchableText.includes(search)) return;
 
                 stats.Total++;
                 stats[issue.status] = (stats[issue.status] || 0) + 1;
+
+                const dellCell = ami
+                    ? `<td data-label="Dell JIRA Number">${formatDellJiraCell(issue)}</td>`
+                    : '';
 
                 list.innerHTML += `
                     <tr>
@@ -648,6 +696,7 @@
                         </td>
                         <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
                         <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
+                        ${dellCell}
                         <td data-label="Title"><a href="${issue.link}" target="_blank" class="text-decoration-none fw-semibold">${issue.title}</a></td>
                         <td class="text-center pe-md-4">
                             <button onclick="openEdit(${originalIndex})" class="btn btn-link text-primary p-0 me-3"><i class="bi bi-pencil-square fs-5"></i></button>
@@ -658,7 +707,7 @@
             });
 
             if (!list.innerHTML) {
-                list.innerHTML = `<tr><td colspan="5" class="text-center py-5 muted-label">目前沒有符合條件的案件</td></tr>`;
+                list.innerHTML = `<tr><td colspan="${getColspan()}" class="text-center py-5 muted-label">目前沒有符合條件的案件</td></tr>`;
             }
 
             document.getElementById('openCount').innerText = stats.Open || 0;
@@ -674,11 +723,16 @@
                 title: document.getElementById('titleInput').value,
                 link: document.getElementById('linkInput').value
             };
+            if (isAmiWorkspace()) {
+                n.dell_jira_number = document.getElementById('dellJiraInput').value.trim();
+                n.dell_link = document.getElementById('dellLinkInput').value.trim();
+            }
             if (!n.jira_number || !n.title) return alert('請填寫必填欄位');
             const next = [...issues, n];
             await updateGitHubFile(next);
-            ['functionInput', 'jiraInput', 'titleInput', 'linkInput'].forEach(id => {
-                document.getElementById(id).value = '';
+            ['functionInput', 'jiraInput', 'titleInput', 'linkInput', 'dellJiraInput', 'dellLinkInput'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
             });
             document.getElementById('statusInput').value = 'Open';
         }
@@ -686,13 +740,22 @@
         async function saveEdit() {
             const index = Number(document.getElementById('editIndex').value);
             const next = [...issues];
-            next[index] = {
+            const updated = {
                 status: document.getElementById('editStatus').value,
                 function: document.getElementById('editFunction').value,
                 jira_number: document.getElementById('editJira').value,
                 title: document.getElementById('editTitle').value,
                 link: document.getElementById('editLink').value
             };
+            if (isAmiWorkspace()) {
+                updated.dell_jira_number = document.getElementById('editDellJira').value.trim();
+                updated.dell_link = document.getElementById('editDellLink').value.trim();
+            } else {
+                // 保留既有欄位（理論上 Dell workspace 不會有，但避免誤刪）
+                if (next[index].dell_jira_number !== undefined) updated.dell_jira_number = next[index].dell_jira_number;
+                if (next[index].dell_link !== undefined) updated.dell_link = next[index].dell_link;
+            }
+            next[index] = updated;
             editModal.hide();
             await updateGitHubFile(next);
         }
@@ -711,10 +774,19 @@
 
         function exportToExcel() {
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Status,Function,Jira Number,Issue Title,Link\n";
+            if (isAmiWorkspace()) {
+                csvContent += "Status,Function,Jira Number,Dell Jira Number,Dell Link,Issue Title,Link\n";
+            } else {
+                csvContent += "Status,Function,Jira Number,Issue Title,Link\n";
+            }
             // 匯出也以最新在前
             issues.slice().reverse().forEach(issue => {
-                const row = `"${issue.status}","${issue.function || ''}","${issue.jira_number}","${issue.title}","${issue.link}"\n`;
+                let row;
+                if (isAmiWorkspace()) {
+                    row = `"${issue.status}","${issue.function || ''}","${issue.jira_number}","${issue.dell_jira_number || ''}","${issue.dell_link || ''}","${issue.title}","${issue.link}"\n`;
+                } else {
+                    row = `"${issue.status}","${issue.function || ''}","${issue.jira_number}","${issue.title}","${issue.link}"\n`;
+                }
                 csvContent += row;
             });
             const encodedUri = encodeURI(csvContent);
