@@ -116,7 +116,9 @@
         "function": "BIOS",
         "jira_number": "BFGS-86297",
         "title": "[Wistron-SVR] BlockSID on AMI BMC is not working",
-        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86297"
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86297",
+        "dell_jira_number": "JIT-392489",
+        "dell_link": "https://jira.gtie.dell.com/browse/JIT-392489"
     },
     {
         "status": "Closed",
