@@ -149,5 +149,14 @@
         "jira_number": "MSG-21408",
         "title": "BIOS Password change",
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-21408"
+    },
+    {
+        "status": "Open",
+        "function": "BIOS+BMC",
+        "jira_number": "BFGS-119765",
+        "title": "[Wistron-SVR][Gaines2.0] The BIOS attribute can't be modified by Redfish PATCH command",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-119765",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
