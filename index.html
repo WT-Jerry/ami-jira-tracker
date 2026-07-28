@@ -513,7 +513,7 @@
         function formatDellJiraCell(issue) {
             const num = (issue.dell_jira_number || '').trim();
             const url = (issue.dell_link || '').trim();
-            if (!num) return '';
+            if (!num) return '<span class="text-muted">N/A</span>';
             if (url) {
                 return `<a href="${url}" target="_blank" class="text-decoration-none fw-semibold jira-code">${num}</a>`;
             }
