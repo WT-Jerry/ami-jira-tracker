@@ -250,6 +250,35 @@
             border: none !important;
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
         }
+        /* Status 下拉：外層彩球 + 內層 select，避免 option 文字被洗白 */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 0 0.15rem;
+            min-width: 104px;
+        }
+        select.status-select {
+            min-width: 96px;
+            max-width: 118px;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            color: #fff !important;
+            font-weight: 700;
+            cursor: pointer;
+            appearance: auto;
+            -webkit-appearance: menulist;
+        }
+        select.status-select:focus {
+            box-shadow: none !important;
+            outline: none;
+        }
+        select.status-select option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            font-weight: 600;
+        }
 
         /* ===== AMI Theme (professional light tech) ===== */
         body.theme-ami {
@@ -303,6 +332,10 @@
         }
         body.theme-ami .bg-open { background: linear-gradient(135deg, #ef4444, #f97316) !important; color: white !important; }
         body.theme-ami .bg-closed { background: linear-gradient(135deg, #10b981, #14b8a6) !important; color: white !important; }
+        body.theme-ami select.status-select option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
         body.theme-ami .jira-code { color: #1d4ed8; }
         body.theme-ami .dell-jira-link {
             color: #db2777 !important;
@@ -428,6 +461,10 @@
         }
         body.theme-dell .bg-open { background: linear-gradient(135deg, #f43f5e, #fb7185) !important; color: white !important; }
         body.theme-dell .bg-closed { background: linear-gradient(135deg, #16a34a, #22c55e) !important; color: white !important; }
+        body.theme-dell select.status-select option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
         body.theme-dell .jira-code { color: #67e8f9; }
         body.theme-dell .table a { color: #e2e8f0; }
         body.theme-dell .table a:hover { color: #67e8f9; }
@@ -971,10 +1008,12 @@
                     <tr>
                         <td class="ps-md-4" data-label="Index"><span class="fw-bold muted-label">#${originalIndex + 1}</span></td>
                         <td data-label="Status">
-                            <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm border-0 fw-bold rounded-pill px-3 ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
-                                <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
-                                <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
-                            </select>
+                            <div class="status-pill ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
+                                <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm status-select px-2">
+                                    <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
+                                    <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
+                                </select>
+                            </div>
                         </td>
                         <td data-label="Function"><span class="badge bg-light text-dark border p-2">${issue.function || 'N/A'}</span></td>
                         <td data-label="Jira Number"><span class="jira-code">${issue.jira_number}</span></td>
