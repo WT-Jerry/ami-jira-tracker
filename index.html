@@ -250,30 +250,41 @@
             border: none !important;
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
         }
-        /* Status 下拉：外層彩球 + 內層 select，避免 option 文字被洗白 */
+        /* Status 下拉：改用可讀配色（不用白字彩底 select，避免 option 被洗掉） */
         .status-pill {
             display: inline-flex;
             align-items: center;
-            border-radius: 999px;
-            padding: 0 0.15rem;
-            min-width: 104px;
+            border-radius: 10px;
+            padding: 0;
+            min-width: 108px;
+            border: 1px solid transparent;
+            overflow: hidden;
+        }
+        .status-pill.is-open {
+            background: rgba(239, 68, 68, 0.10);
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+        .status-pill.is-closed {
+            background: rgba(16, 185, 129, 0.10);
+            border-color: rgba(16, 185, 129, 0.35);
         }
         select.status-select {
-            min-width: 96px;
-            max-width: 118px;
+            min-width: 108px;
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
-            color: #fff !important;
             font-weight: 700;
             cursor: pointer;
             appearance: auto;
             -webkit-appearance: menulist;
+            color-scheme: light;
         }
         select.status-select:focus {
             box-shadow: none !important;
             outline: none;
         }
+        .status-pill.is-open select.status-select { color: #b91c1c !important; }
+        .status-pill.is-closed select.status-select { color: #047857 !important; }
         select.status-select option {
             background-color: #ffffff !important;
             color: #0f172a !important;
@@ -332,6 +343,14 @@
         }
         body.theme-ami .bg-open { background: linear-gradient(135deg, #ef4444, #f97316) !important; color: white !important; }
         body.theme-ami .bg-closed { background: linear-gradient(135deg, #10b981, #14b8a6) !important; color: white !important; }
+        body.theme-ami .status-pill.is-open {
+            background: rgba(239, 68, 68, 0.10);
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+        body.theme-ami .status-pill.is-closed {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.35);
+        }
         body.theme-ami select.status-select option {
             background-color: #ffffff !important;
             color: #0f172a !important;
@@ -461,9 +480,22 @@
         }
         body.theme-dell .bg-open { background: linear-gradient(135deg, #f43f5e, #fb7185) !important; color: white !important; }
         body.theme-dell .bg-closed { background: linear-gradient(135deg, #16a34a, #22c55e) !important; color: white !important; }
+        body.theme-dell .status-pill.is-open {
+            background: rgba(244, 63, 94, 0.16);
+            border-color: rgba(251, 113, 133, 0.4);
+        }
+        body.theme-dell .status-pill.is-closed {
+            background: rgba(34, 197, 94, 0.14);
+            border-color: rgba(74, 222, 128, 0.35);
+        }
+        body.theme-dell .status-pill.is-open select.status-select { color: #fda4af !important; }
+        body.theme-dell .status-pill.is-closed select.status-select { color: #86efac !important; }
+        body.theme-dell select.status-select {
+            color-scheme: dark;
+        }
         body.theme-dell select.status-select option {
-            background-color: #ffffff !important;
-            color: #0f172a !important;
+            background-color: #0f172a !important;
+            color: #f8fafc !important;
         }
         body.theme-dell .jira-code { color: #67e8f9; }
         body.theme-dell .table a { color: #e2e8f0; }
@@ -1008,7 +1040,7 @@
                     <tr>
                         <td class="ps-md-4" data-label="Index"><span class="fw-bold muted-label">#${originalIndex + 1}</span></td>
                         <td data-label="Status">
-                            <div class="status-pill ${issue.status === 'Open' ? 'bg-open' : 'bg-closed'}">
+                            <div class="status-pill ${issue.status === 'Open' ? 'is-open' : 'is-closed'}">
                                 <select onchange="updateStatus(${originalIndex}, this.value)" class="form-select form-select-sm status-select px-2">
                                     <option value="Open" ${issue.status === 'Open' ? 'selected' : ''}>Open</option>
                                     <option value="Closed" ${issue.status === 'Closed' ? 'selected' : ''}>Closed</option>
