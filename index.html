@@ -96,6 +96,19 @@
         body.theme-ami .bg-open { background-color: var(--ami-red) !important; color: white !important; }
         body.theme-ami .bg-closed { background-color: var(--ami-green) !important; color: white !important; }
         body.theme-ami .jira-code { color: #0052cc; }
+        body.theme-ami .dell-jira-link {
+            color: #c2185b !important;
+            font-weight: 700;
+            text-decoration: underline !important;
+            text-underline-offset: 2px;
+        }
+        body.theme-ami .dell-jira-link:hover {
+            color: #880e4f !important;
+        }
+        body.theme-ami .dell-jira-text {
+            color: #6a1b9a;
+            font-weight: 700;
+        }
         body.theme-ami .table a { color: #212529; }
         body.theme-ami .muted-label { color: #6c757d; }
 
@@ -515,9 +528,9 @@
             const url = (issue.dell_link || '').trim();
             if (!num) return '<span class="text-muted">N/A</span>';
             if (url) {
-                return `<a href="${url}" target="_blank" class="text-decoration-none fw-semibold jira-code">${num}</a>`;
+                return `<a href="${url}" target="_blank" class="dell-jira-link jira-code">${num}</a>`;
             }
-            return `<span class="jira-code">${num}</span>`;
+            return `<span class="dell-jira-text jira-code">${num}</span>`;
         }
 
         function getColspan() {
