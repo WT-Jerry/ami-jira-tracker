@@ -1,0 +1,11 @@
+Version: AMI_DELL_JIRA_Tracker_V1
+Date: 2026-07-28T05:11:33Z
+Features snapshot:
+- AMI / Dell dual-tab tracker
+- Dell black theme
+- AMI Dell JIRA Number + Link fields
+- Add issue via modal
+- Export Excel
+- Reverse list (newest on top)
+- Index column (#1 oldest at bottom)
+- Auto-fetch on first load
