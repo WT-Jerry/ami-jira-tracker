@@ -542,9 +542,10 @@
             const savedPAT = localStorage.getItem('github_pat');
             if (savedPAT) document.getElementById('patInput').value = savedPAT;
 
+            // 還原上次分頁，並一定要抓取資料（先前 reload=false 會卡在「讀取中...」）
             const savedWorkspace = localStorage.getItem('jira_workspace');
             if (savedWorkspace && WORKSPACES[savedWorkspace]) {
-                switchWorkspace(savedWorkspace, false);
+                switchWorkspace(savedWorkspace, true);
             } else {
                 applyWorkspaceUI();
                 fetchIssues();
