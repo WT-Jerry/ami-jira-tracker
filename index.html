@@ -111,8 +111,31 @@
             background: var(--chip-bg, #fff);
             color: var(--chip-text, #475569);
         }
-        /* 預設顯示 AMI 專屬；Dell 專屬由 JS 切換 */
-        .dell-only-field, .dell-only-col { display: none; }
+        /* 分頁專屬欄位：依 body theme 顯示，避免 inline display='' 被 CSS none 蓋掉 */
+        .dell-only-field,
+        .dell-only-col {
+            display: none !important;
+        }
+        body.theme-dell .dell-only-field {
+            display: block !important;
+        }
+        body.theme-dell .dell-only-col {
+            display: table-cell !important;
+        }
+        body.theme-dell .ami-only-field,
+        body.theme-dell .ami-only-col {
+            display: none !important;
+        }
+        body.theme-ami .ami-only-field {
+            display: block !important;
+        }
+        body.theme-ami .ami-only-col {
+            display: table-cell !important;
+        }
+        body.theme-ami .dell-only-field,
+        body.theme-ami .dell-only-col {
+            display: none !important;
+        }
         .card {
             border: 1px solid var(--panel-border, transparent);
             border-radius: 16px;
@@ -946,14 +969,8 @@
             document.querySelector('.loading-text').classList.toggle('text-info', ws.id === 'dell');
             document.querySelector('.loading-text').classList.toggle('text-primary', ws.id === 'ami');
 
-            // AMI 專屬：Dell JIRA Number / Dell Link
-            // Dell 專屬：AMI JIRA Number / AMI Link
-            document.querySelectorAll('.ami-only-field, .ami-only-col').forEach(el => {
-                el.style.display = ws.id === 'ami' ? '' : 'none';
-            });
-            document.querySelectorAll('.dell-only-field, .dell-only-col').forEach(el => {
-                el.style.display = ws.id === 'dell' ? '' : 'none';
-            });
+            // AMI / Dell 專屬欄位改由 CSS theme class 控制顯示
+            // （先前 JS 設 display='' 會被 .dell-only-col {display:none} 蓋掉）
 
             // 分頁切換時更新 Jira Number placeholder
             const jiraInput = document.getElementById('jiraInput');
