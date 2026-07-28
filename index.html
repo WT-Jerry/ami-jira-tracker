@@ -7,67 +7,278 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
         :root {
-            --ami-red: #dc3545;
-            --ami-green: #198754;
-            --dell-bg: #0b0b0c;
-            --dell-panel: #16171a;
-            --dell-panel-2: #1e2024;
-            --dell-border: #2c2f36;
-            --dell-text: #f3f4f6;
-            --dell-muted: #9ca3af;
+            --ami-red: #ef4444;
+            --ami-green: #10b981;
+            --ami-blue: #2563eb;
+            --ami-cyan: #0ea5e9;
+            --ami-bg0: #f3f6fb;
+            --ami-bg1: #e8eef8;
+            --ami-panel: rgba(255,255,255,0.86);
+            --ami-border: rgba(148,163,184,0.35);
+            --ami-text: #0f172a;
+            --ami-muted: #64748b;
+
+            --dell-bg: #070a10;
+            --dell-panel: rgba(18, 24, 38, 0.92);
+            --dell-panel-2: #121a2a;
+            --dell-border: rgba(56, 189, 248, 0.18);
+            --dell-text: #e8eefc;
+            --dell-muted: #93a4c3;
             --dell-accent: #0076ce;
-            --dell-accent-2: #00a3e0;
-            --dell-open: #e53935;
-            --dell-closed: #2e7d32;
+            --dell-accent-2: #22d3ee;
+            --dell-open: #f43f5e;
+            --dell-closed: #22c55e;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.25s ease, color 0.25s ease;
+            font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
         }
-        .container { max-width: 1300px; }
-        .card { border: none; border-radius: 12px; }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+        }
+
+        .container { max-width: 1320px; }
+        .app-shell {
+            border: 1px solid var(--shell-border, transparent);
+            border-radius: 20px;
+            padding: 1.1rem 1.1rem 1.4rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shell-shadow, none);
+            background: var(--shell-bg, transparent);
+        }
+        .hero-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid var(--divider, rgba(148,163,184,0.25));
+        }
+        .brand-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent, #2563eb);
+            margin-bottom: 0.35rem;
+        }
+        .brand-kicker .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--accent, #2563eb);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent, #2563eb) 20%, transparent);
+        }
+        .brand-title-row {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            flex-wrap: wrap;
+        }
+        .brand-title-row h2 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+        .version-chip {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            border: 1px solid var(--chip-border, #cbd5e1);
+            background: var(--chip-bg, #fff);
+            color: var(--chip-text, #475569);
+        }
+        .card {
+            border: 1px solid var(--panel-border, transparent);
+            border-radius: 16px;
+            background: var(--panel-bg, #fff);
+            box-shadow: var(--panel-shadow, none);
+        }
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             display: none; justify-content: center; align-items: center; z-index: 2000;
+            backdrop-filter: blur(4px);
         }
-        .stat-card { transition: transform 0.2s; flex: 1; min-width: 100px; }
-        .stat-card:hover { transform: translateY(-5px); }
-        .jira-code { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+        .loading-box {
+            border-radius: 16px;
+            padding: 1.4rem 1.8rem;
+            border: 1px solid rgba(148,163,184,0.25);
+            background: rgba(15,23,42,0.85);
+            color: #e2e8f0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        }
+        .stat-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex: 1;
+            min-width: 110px;
+            border-radius: 14px !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            right: -10px; top: -10px;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 70%);
+            pointer-events: none;
+        }
+        .stat-card:hover { transform: translateY(-4px); }
+        .stat-card .stat-label {
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            font-weight: 700;
+        }
+        .jira-code {
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
         .workspace-tabs {
-            display: flex;
-            gap: 8px;
+            display: inline-flex;
+            gap: 6px;
             flex-wrap: wrap;
             margin-bottom: 1rem;
+            padding: 5px;
+            border-radius: 14px;
+            border: 1px solid var(--tabs-border, rgba(148,163,184,0.3));
+            background: var(--tabs-bg, rgba(255,255,255,0.7));
         }
         .workspace-tabs .nav-btn {
             border: 1px solid transparent;
-            border-radius: 999px;
-            padding: 0.45rem 1rem;
+            border-radius: 10px;
+            padding: 0.48rem 1rem;
             font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
+            background: transparent;
         }
         .workspace-tabs .nav-btn.active {
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(37,99,235,0.28);
+        }
+        .toolbar-row .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent, #2563eb), var(--accent-2, #0ea5e9));
+            border: none;
+            box-shadow: 0 8px 18px color-mix(in srgb, var(--accent, #2563eb) 30%, transparent);
+        }
+        .btn-primary:hover {
+            filter: brightness(1.05);
+        }
+        .table-wrap {
+            border: 1px solid var(--panel-border, #e2e8f0);
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--panel-bg, #fff);
+            box-shadow: var(--panel-shadow, 0 10px 30px rgba(15,23,42,0.05));
+        }
+        .table {
+            --bs-table-bg: transparent;
+            margin-bottom: 0;
+        }
+        .table thead th {
+            border-top: none;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            vertical-align: middle;
+            text-align: left;
+            line-height: 1.25;
+            padding-top: 0.95rem;
+            padding-bottom: 0.95rem;
+        }
+        .table tbody td {
+            vertical-align: middle;
+            padding-top: 0.85rem;
+            padding-bottom: 0.85rem;
+        }
+        .table tbody tr {
+            transition: background 0.15s ease;
+        }
+        .form-control, .form-select, .input-group-text {
+            border-radius: 10px;
+        }
+        .input-group .form-control {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .input-group-text {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .modal-content {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--panel-border, #e2e8f0);
+            box-shadow: 0 25px 60px rgba(2,6,23,0.28);
+        }
+        .modal-header, .modal-footer {
+            border-color: var(--divider, #e2e8f0);
+        }
+        .bg-open, .bg-closed {
+            border: none !important;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
         }
 
-        /* ===== AMI Theme (light) ===== */
+        /* ===== AMI Theme (professional light tech) ===== */
         body.theme-ami {
-            background-color: #f4f7f6;
-            color: #212529;
+            --accent: #2563eb;
+            --accent-2: #0ea5e9;
+            --shell-bg: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.55));
+            --shell-border: rgba(148,163,184,0.28);
+            --shell-shadow: 0 20px 50px rgba(15,23,42,0.08);
+            --divider: rgba(148,163,184,0.28);
+            --panel-bg: rgba(255,255,255,0.9);
+            --panel-border: rgba(148,163,184,0.28);
+            --panel-shadow: 0 12px 28px rgba(15,23,42,0.06);
+            --tabs-bg: rgba(255,255,255,0.75);
+            --tabs-border: rgba(148,163,184,0.3);
+            --chip-bg: #eff6ff;
+            --chip-border: #bfdbfe;
+            --chip-text: #1d4ed8;
+            background:
+                radial-gradient(1200px 500px at 10% -10%, rgba(37,99,235,0.14), transparent 55%),
+                radial-gradient(900px 400px at 90% 0%, rgba(14,165,233,0.12), transparent 50%),
+                linear-gradient(180deg, var(--ami-bg0), var(--ami-bg1));
+            color: var(--ami-text);
         }
-        body.theme-ami .loading-overlay { background: rgba(255,255,255,0.8); }
-        body.theme-ami .brand-title { color: #0d6efd; }
-        body.theme-ami .workspace-tabs .nav-btn {
-            background: #fff;
-            border-color: #dee2e6;
-            color: #495057;
-        }
+        body.theme-ami .loading-overlay { background: rgba(241,245,249,0.55); }
+        body.theme-ami .brand-title { color: var(--ami-blue); }
+        body.theme-ami .workspace-tabs .nav-btn { color: #475569; }
         body.theme-ami .workspace-tabs .nav-btn.active {
-            background: #0d6efd;
-            border-color: #0d6efd;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            border-color: transparent;
             color: #fff;
         }
         body.theme-ami .card,
@@ -76,66 +287,91 @@
         body.theme-ami .form-control,
         body.theme-ami .form-select {
             background-color: #fff;
-            color: #212529;
+            color: var(--ami-text);
+            border-color: #dbe3ef;
+        }
+        body.theme-ami .stat-card {
+            box-shadow: 0 10px 24px rgba(15,23,42,0.05);
         }
         body.theme-ami .table thead th {
-            background-color: #f8f9fa;
-            border-top: none;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            vertical-align: middle;
-            text-align: left;
-            line-height: 1.25;
-            padding-top: 0.9rem;
-            padding-bottom: 0.9rem;
+            background: linear-gradient(180deg, #f8fafc, #eef2ff);
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
         }
-        body.theme-ami .table tbody td {
-            vertical-align: middle;
+        body.theme-ami .table tbody tr:hover {
+            background: rgba(37,99,235,0.035);
         }
-        body.theme-ami .bg-open { background-color: var(--ami-red) !important; color: white !important; }
-        body.theme-ami .bg-closed { background-color: var(--ami-green) !important; color: white !important; }
-        body.theme-ami .jira-code { color: #0052cc; }
+        body.theme-ami .bg-open { background: linear-gradient(135deg, #ef4444, #f97316) !important; color: white !important; }
+        body.theme-ami .bg-closed { background: linear-gradient(135deg, #10b981, #14b8a6) !important; color: white !important; }
+        body.theme-ami .jira-code { color: #1d4ed8; }
         body.theme-ami .dell-jira-link {
-            color: #c2185b !important;
+            color: #db2777 !important;
             font-weight: 700;
             text-decoration: none !important;
         }
         body.theme-ami .dell-jira-link:hover {
-            color: #880e4f !important;
-            text-decoration: none !important;
+            color: #9d174d !important;
         }
         body.theme-ami .dell-jira-text {
-            color: #6a1b9a;
+            color: #7c3aed;
             font-weight: 700;
         }
-        body.theme-ami .table a { color: #212529; }
-        body.theme-ami .muted-label { color: #6c757d; }
+        body.theme-ami .table a { color: #0f172a; }
+        body.theme-ami .table a:hover { color: #2563eb; }
+        body.theme-ami .muted-label { color: var(--ami-muted); }
+        body.theme-ami .btn-light,
+        body.theme-ami .btn-outline-secondary {
+            background: #fff;
+            border-color: #cbd5e1;
+            color: #334155;
+        }
+        body.theme-ami .btn-success {
+            background: linear-gradient(135deg, #059669, #0d9488);
+            border: none;
+        }
 
-        /* ===== Dell Theme (black) ===== */
+        /* ===== Dell Theme (deep tech black) ===== */
         body.theme-dell {
-            background: radial-gradient(circle at top, #14161a 0%, var(--dell-bg) 55%);
+            --accent: #0076ce;
+            --accent-2: #22d3ee;
+            --shell-bg: linear-gradient(180deg, rgba(15,23,42,0.78), rgba(8,12,22,0.72));
+            --shell-border: rgba(34,211,238,0.14);
+            --shell-shadow: 0 24px 60px rgba(0,0,0,0.45);
+            --divider: rgba(148,163,184,0.16);
+            --panel-bg: var(--dell-panel);
+            --panel-border: var(--dell-border);
+            --panel-shadow: 0 16px 40px rgba(0,0,0,0.35);
+            --tabs-bg: rgba(15,23,42,0.7);
+            --tabs-border: rgba(34,211,238,0.16);
+            --chip-bg: rgba(14,165,233,0.12);
+            --chip-border: rgba(34,211,238,0.3);
+            --chip-text: #67e8f9;
+            background:
+                radial-gradient(1000px 420px at 15% -5%, rgba(0,118,206,0.22), transparent 55%),
+                radial-gradient(800px 380px at 90% 0%, rgba(34,211,238,0.12), transparent 50%),
+                linear-gradient(180deg, #0a101b, var(--dell-bg));
             color: var(--dell-text);
         }
-        body.theme-dell .loading-overlay { background: rgba(0,0,0,0.75); }
-        body.theme-dell .brand-title { color: var(--dell-accent-2); }
-        body.theme-dell .workspace-tabs .nav-btn {
-            background: var(--dell-panel);
-            border-color: var(--dell-border);
-            color: var(--dell-muted);
+        body.theme-dell::before {
+            background-image:
+                linear-gradient(rgba(34,211,238,0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34,211,238,0.045) 1px, transparent 1px);
         }
+        body.theme-dell .loading-overlay { background: rgba(2,6,23,0.72); }
+        body.theme-dell .brand-title { color: var(--dell-accent-2); }
+        body.theme-dell .workspace-tabs .nav-btn { color: var(--dell-muted); }
         body.theme-dell .workspace-tabs .nav-btn.active {
             background: linear-gradient(135deg, var(--dell-accent), var(--dell-accent-2));
             border-color: transparent;
-            color: #fff;
-            box-shadow: 0 8px 24px rgba(0,118,206,0.35);
+            color: #041018;
+            box-shadow: 0 10px 28px rgba(34,211,238,0.25);
         }
         body.theme-dell .card,
         body.theme-dell .stat-card {
             background: var(--dell-panel) !important;
             color: var(--dell-text);
             border: 1px solid var(--dell-border) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35) !important;
         }
         body.theme-dell .stat-card.border-start { border-left-width: 4px !important; }
         body.theme-dell .muted-label,
@@ -145,91 +381,81 @@
         body.theme-dell .form-select,
         body.theme-dell .input-group-text {
             background: var(--dell-panel-2);
-            border-color: var(--dell-border);
+            border-color: rgba(148,163,184,0.2);
             color: var(--dell-text);
         }
-        body.theme-dell .form-control::placeholder { color: #6b7280; }
+        body.theme-dell .form-control::placeholder { color: #6b7c99; }
         body.theme-dell .form-control:focus,
         body.theme-dell .form-select:focus {
             background: var(--dell-panel-2);
-            border-color: var(--dell-accent);
+            border-color: var(--dell-accent-2);
             color: var(--dell-text);
-            box-shadow: 0 0 0 0.2rem rgba(0,118,206,0.2);
+            box-shadow: 0 0 0 0.2rem rgba(34,211,238,0.15);
         }
         body.theme-dell .btn-primary {
             background: linear-gradient(135deg, var(--dell-accent), var(--dell-accent-2));
             border: none;
+            color: #041018;
+            font-weight: 700;
         }
         body.theme-dell .btn-success {
-            background: #0f766e;
-            border-color: #0f766e;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            border: none;
         }
         body.theme-dell .btn-light,
         body.theme-dell .btn-outline-secondary {
-            background: var(--dell-panel-2);
-            border-color: var(--dell-border);
+            background: #121a2a;
+            border-color: rgba(148,163,184,0.25);
             color: var(--dell-text);
         }
         body.theme-dell .btn-light:hover,
         body.theme-dell .btn-outline-secondary:hover {
-            background: #2a2d34;
+            background: #1a2438;
             color: #fff;
         }
         body.theme-dell .table {
             color: var(--dell-text);
-            --bs-table-bg: transparent;
-            --bs-table-hover-bg: rgba(255,255,255,0.04);
-            --bs-table-striped-bg: transparent;
+            --bs-table-hover-bg: rgba(34,211,238,0.05);
         }
         body.theme-dell .table thead th {
-            background: var(--dell-panel-2);
-            border-top: none;
-            border-bottom: 1px solid var(--dell-border);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-            color: var(--dell-muted);
-            vertical-align: middle;
-            text-align: left;
-            line-height: 1.25;
-            padding-top: 0.9rem;
-            padding-bottom: 0.9rem;
-        }
-        body.theme-dell .table tbody td {
-            vertical-align: middle;
+            background: linear-gradient(180deg, #121a2a, #0e1522);
+            border-bottom: 1px solid rgba(34,211,238,0.15);
+            color: #9fb2d1;
         }
         body.theme-dell .table td,
         body.theme-dell .table th {
-            border-color: var(--dell-border);
+            border-color: rgba(148,163,184,0.12);
         }
-        body.theme-dell .bg-open { background-color: var(--dell-open) !important; color: white !important; }
-        body.theme-dell .bg-closed { background-color: var(--dell-closed) !important; color: white !important; }
-        body.theme-dell .jira-code { color: var(--dell-accent-2); }
-        body.theme-dell .table a { color: #e5e7eb; }
+        body.theme-dell .bg-open { background: linear-gradient(135deg, #f43f5e, #fb7185) !important; color: white !important; }
+        body.theme-dell .bg-closed { background: linear-gradient(135deg, #16a34a, #22c55e) !important; color: white !important; }
+        body.theme-dell .jira-code { color: #67e8f9; }
+        body.theme-dell .table a { color: #e2e8f0; }
+        body.theme-dell .table a:hover { color: #67e8f9; }
         body.theme-dell .badge.bg-light {
-            background: #2a2d34 !important;
-            color: #e5e7eb !important;
-            border-color: var(--dell-border) !important;
+            background: #1a2438 !important;
+            color: #dbeafe !important;
+            border-color: rgba(148,163,184,0.2) !important;
         }
         body.theme-dell .modal-content {
-            background: var(--dell-panel);
+            background: #0f172a;
             color: var(--dell-text);
-            border: 1px solid var(--dell-border);
+            border: 1px solid rgba(34,211,238,0.18);
         }
         body.theme-dell .modal-header,
         body.theme-dell .modal-footer {
-            border-color: var(--dell-border);
+            border-color: rgba(148,163,184,0.15);
         }
         body.theme-dell .btn-close {
             filter: invert(1) grayscale(100%);
         }
         body.theme-dell .btn-secondary {
-            background: #374151;
-            border-color: #374151;
+            background: #1f2937;
+            border-color: #1f2937;
         }
 
         /* 手機版排版優化 */
         @media (max-width: 767.98px) {
+            .app-shell { padding: 0.85rem; border-radius: 14px; }
             .stat-container { gap: 10px !important; }
             .stat-card { padding: 8px !important; }
             .stat-card .h4 { font-size: 1.1rem; }
@@ -237,18 +463,18 @@
             .responsive-table tr {
                 display: block;
                 margin-bottom: 1rem;
-                border-radius: 12px;
+                border-radius: 14px;
                 padding: 10px;
             }
             body.theme-ami .responsive-table tr {
-                border: 1px solid #eee;
+                border: 1px solid #e2e8f0;
                 background: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                box-shadow: 0 8px 18px rgba(15,23,42,0.05);
             }
             body.theme-dell .responsive-table tr {
                 border: 1px solid var(--dell-border);
                 background: var(--dell-panel);
-                box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+                box-shadow: 0 10px 24px rgba(0,0,0,0.28);
             }
             .responsive-table td {
                 display: flex;
@@ -265,29 +491,30 @@
                 min-width: 100px;
                 font-size: 0.8rem;
             }
-            body.theme-ami .responsive-table td::before { color: #666; }
+            body.theme-ami .responsive-table td::before { color: #64748b; }
             body.theme-dell .responsive-table td::before { color: var(--dell-muted); }
             .responsive-table td:last-child {
                 justify-content: flex-end;
                 margin-top: 5px;
                 padding-top: 10px;
             }
-            body.theme-ami .responsive-table td:last-child { border-top: 1px solid #eee; }
-            body.theme-dell .responsive-table td:last-child { border-top: 1px solid var(--dell-border); }
+            body.theme-ami .responsive-table td:last-child { border-top: 1px solid #e2e8f0; }
+            body.theme-dell .responsive-table td:last-child { border-top: 1px solid rgba(148,163,184,0.15); }
             .responsive-table td:last-child::before { display: none; }
             .container { padding-left: 10px; padding-right: 10px; }
-            h2 { font-size: 1.4rem; }
+            h2 { font-size: 1.25rem !important; }
         }
     </style>
 </head>
 <body class="container mt-3 mt-md-4 theme-ami">
     <div id="loading" class="loading-overlay">
-        <div class="text-center">
-            <div class="spinner-border text-primary" role="status"></div>
+        <div class="loading-box text-center">
+            <div class="spinner-border text-info" role="status"></div>
             <div class="mt-2 fw-bold loading-text">雲端同步中...</div>
         </div>
     </div>
 
+    <div class="app-shell">
     <!-- 分頁切換 -->
     <div class="workspace-tabs">
         <button type="button" class="nav-btn active" id="tabAmi" onclick="switchWorkspace('ami')">
@@ -298,39 +525,39 @@
         </button>
     </div>
 
-    <div class="row align-items-center mb-4">
-        <div class="col-md-6 mb-3 mb-md-0">
-            <h2 class="fw-bold m-0">
-                <i class="bi bi-clipboard-data-history brand-title" id="pageIcon"></i>
-                <span id="pageTitle">AMI JIRA Tracker</span>
-                <small class="text-muted fs-6" id="pageVersion">V1</small>
-            </h2>
-            <div class="small muted-label mt-1" id="pageSubtitle">AMI 案件追蹤 · GitHub data.json</div>
+    <div class="hero-bar">
+        <div>
+            <div class="brand-kicker"><span class="dot"></span><span id="brandKickerText">ISSUE CONTROL CENTER</span></div>
+            <div class="brand-title-row">
+                <i class="bi bi-cpu brand-title fs-3" id="pageIcon"></i>
+                <h2 id="pageTitle">AMI JIRA Tracker</h2>
+                <span class="version-chip" id="pageVersion">V1</span>
+            </div>
+            <div class="small muted-label mt-2" id="pageSubtitle">AMI 案件追蹤 · GitHub data.json</div>
         </div>
-        <div class="col-md-6 text-md-end">
-            <input type="password" id="patInput" class="form-control form-control-sm d-inline-block" style="width: 200px;" placeholder="Enter GitHub PAT">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <input type="password" id="patInput" class="form-control form-control-sm" style="width: 210px;" placeholder="Enter GitHub PAT">
             <button class="btn btn-sm btn-outline-secondary" onclick="savePAT()">Save PAT</button>
         </div>
-        <div class="col-12 mt-3">
-            <div class="d-flex stat-container gap-2 gap-md-3">
-                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-danger border-4 text-center text-md-start">
-                    <div class="muted-label" style="font-size: 0.7rem;">OPEN</div>
-                    <div id="openCount" class="h4 fw-bold m-0 text-danger">0</div>
-                </div>
-                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-success border-4 text-center text-md-start">
-                    <div class="muted-label" style="font-size: 0.7rem;">CLOSED</div>
-                    <div id="closedCount" class="h4 fw-bold m-0 text-success">0</div>
-                </div>
-                <div class="stat-card p-2 px-md-3 shadow-sm rounded-3 border-start border-primary border-4 text-center text-md-start">
-                    <div class="muted-label" style="font-size: 0.7rem;">TOTAL</div>
-                    <div id="totalCount" class="h4 fw-bold m-0 text-primary">0</div>
-                </div>
-            </div>
+    </div>
+
+    <div class="d-flex stat-container gap-2 gap-md-3 mb-4">
+        <div class="stat-card p-3 bg-white shadow-sm border-start border-danger border-4 text-center text-md-start">
+            <div class="muted-label stat-label">OPEN</div>
+            <div id="openCount" class="h3 fw-bold m-0 text-danger">0</div>
+        </div>
+        <div class="stat-card p-3 bg-white shadow-sm border-start border-success border-4 text-center text-md-start">
+            <div class="muted-label stat-label">CLOSED</div>
+            <div id="closedCount" class="h3 fw-bold m-0 text-success">0</div>
+        </div>
+        <div class="stat-card p-3 bg-white shadow-sm border-start border-primary border-4 text-center text-md-start">
+            <div class="muted-label stat-label">TOTAL</div>
+            <div id="totalCount" class="h3 fw-bold m-0 text-primary">0</div>
         </div>
     </div>
 
     <!-- 工具列：新增 / 搜尋 / 匯出 / 刷新 -->
-    <div class="row mb-3 align-items-center g-2">
+    <div class="row mb-3 align-items-center g-2 toolbar-row">
         <div class="col-12 col-md-auto">
             <button class="btn btn-primary fw-bold shadow-sm btn-sm px-4 w-100 w-md-auto" onclick="openAddModal()">
                 <i class="bi bi-plus-lg"></i> 新增案件
@@ -353,7 +580,7 @@
     </div>
 
     <!-- Issue 列表表格 -->
-    <div class="card shadow-sm border-0 bg-transparent">
+    <div class="table-wrap">
         <div class="card-body p-0 overflow-hidden">
             <table class="table table-hover align-middle mb-0 responsive-table">
                 <thead>
@@ -373,6 +600,7 @@
             </table>
         </div>
     </div>
+    </div><!-- /.app-shell -->
 
     <!-- 新增案件彈出視窗 -->
     <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
