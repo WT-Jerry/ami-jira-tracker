@@ -160,7 +160,7 @@
         "dell_link": ""
     },
     {
-        "status": "Closed",
+        "status": "Open",
         "function": "BIOS",
         "jira_number": "MSG-37081",
         "title": "[GB300]  BIOS setting ODM001 accepted but not applied after reboot",
