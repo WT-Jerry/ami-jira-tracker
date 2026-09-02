@@ -167,5 +167,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/7/MSG-37081",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-125482",
+        "title": "[Wistron-SVR][Gaines2.0] Request BIOS Impact Assessment and Remediation Plan for CVE-2026-66333 and CVE-2026-66334",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-125482",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
