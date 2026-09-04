@@ -169,7 +169,7 @@
         "dell_link": ""
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-125482",
         "title": "[Wistron-SVR][Gaines2.0] Request BIOS Impact Assessment and Remediation Plan for CVE-2026-66333 and CVE-2026-66334",
