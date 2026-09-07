@@ -176,5 +176,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-125482",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-125723",
+        "title": "[Wistron-SVR][Gaines2.0] The problem about \"index.js\" in \"RemoteFWConfiguration\" module package",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-125723?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
