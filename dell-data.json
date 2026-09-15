@@ -9,7 +9,7 @@
         "ami_link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-86287"
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "JIT-392489",
         "title": "[Gaines 2.0][Dell AMI BMC] BlockSID on AMI BMC is not working",
