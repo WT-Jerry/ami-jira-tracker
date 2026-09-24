@@ -178,7 +178,7 @@
         "dell_link": ""
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-125723",
         "title": "[Wistron-SVR][Gaines2.0] The problem about \"index.js\" in \"RemoteFWConfiguration\" module package",
