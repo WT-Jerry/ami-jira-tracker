@@ -205,7 +205,7 @@
         "dell_link": ""
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-126950",
         "title": "[Wistron-SVR][Gaines2.0] TPM firmware method for Nvidia GB200/300 NVL72 platform",
