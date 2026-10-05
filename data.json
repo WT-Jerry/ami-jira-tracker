@@ -221,5 +221,14 @@
         "link": "https://oneami.atlassian.net/servicedesk/customer/portal/7/MSG-41891",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-127457",
+        "title": "[Wistron-SVR][GBx00] Secure Boot rejects a validly signed image when db holds the root CA, and only accepts it with the intermediate CA in db",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-127457",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
