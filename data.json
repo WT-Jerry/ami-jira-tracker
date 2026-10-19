@@ -223,7 +223,7 @@
         "dell_link": ""
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-127457",
         "title": "[Wistron-SVR][GBx00] Secure Boot rejects a validly signed image when db holds the root CA, and only accepts it with the intermediate CA in db",
