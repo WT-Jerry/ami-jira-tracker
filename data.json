@@ -230,5 +230,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-127457",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-128604",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] Is there any way to preserve NVRAM variables after the NVRAM UUID change?",
+        "link": "https://oneami.atlassian.net/servicedesk/customer/portal/8/BFGS-128604",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
