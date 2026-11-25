@@ -232,7 +232,7 @@
         "dell_link": ""
     },
     {
-        "status": "Open",
+        "status": "Closed",
         "function": "BIOS",
         "jira_number": "BFGS-128604",
         "title": "[Wistron-SVR][Gaines 1.5/2.0] Is there any way to preserve NVRAM variables after the NVRAM UUID change?",
