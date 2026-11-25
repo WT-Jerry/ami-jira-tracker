@@ -257,5 +257,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-130894",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-131490",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0]Aptio 5.x SA50372 fix for Nvidia GB200/GB300 (9ABDA)",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131490?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
