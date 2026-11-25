@@ -266,5 +266,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131490?helpCenterId=0237da84-0b1d-4263-bd61-5aa62ba66b7a",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS+BMC",
+        "jira_number": "BFGS-130642",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] Need documentation to explain the mechanism/behavior of BIOS and BMC communication (data exchange) during POST.",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-130642",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
