@@ -215,7 +215,7 @@
     },
     {
         "status": "Open",
-        "function": "BMC",
+        "function": "BIOS",
         "jira_number": "MSG-41891",
         "title": "[GBx00] Secure Boot rejects a validly signed image when db holds the root CA, and only accepts it with the intermediate CA in db",
         "link": "https://oneami.atlassian.net/servicedesk/customer/portal/7/MSG-41891",
