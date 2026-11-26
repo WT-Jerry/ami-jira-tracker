@@ -324,10 +324,10 @@
     {
         "status": "Open",
         "function": "BIOS+BMC",
-        "jira_number": "JIT-415732",
+        "jira_number": "",
         "title": "QUADRATURE Capital | Gaines 2.0 | Some CTs have a Placeholder UUID",
-        "link": "",
-        "dell_jira_number": "https://jira.gtie.dell.com/browse/JIT-415732",
+        "link": "https://jira.gtie.dell.com/browse/JIT-415732",
+        "dell_jira_number": "JIT-415732",
         "dell_link": ""
     }
 ]
