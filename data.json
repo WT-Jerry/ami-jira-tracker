@@ -311,5 +311,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131625",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS+BMC",
+        "jira_number": "MSG-41811",
+        "title": "[GBx00] Missing TPM management functionality ",
+        "link": "https://oneami.atlassian.net/servicedesk/customer/portal/7/MSG-41811",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
