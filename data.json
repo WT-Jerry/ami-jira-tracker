@@ -320,5 +320,14 @@
         "link": "https://oneami.atlassian.net/servicedesk/customer/portal/7/MSG-41811",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS+BMC",
+        "jira_number": "JIT-415732",
+        "title": "QUADRATURE Capital | Gaines 2.0 | Some CTs have a Placeholder UUID",
+        "link": "",
+        "dell_jira_number": "https://jira.gtie.dell.com/browse/JIT-415732",
+        "dell_link": ""
     }
 ]
