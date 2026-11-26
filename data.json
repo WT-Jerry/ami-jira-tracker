@@ -302,5 +302,14 @@
         "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131624",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-131625",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] Aptio 5.x SA50379 Remediation Plan for Nvidia GB200/GB300 (9ABDA)",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131625",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
