@@ -284,5 +284,14 @@
         "link": "https://oneami.atlassian.net/servicedesk/customer/portal/8/BFGS-131479",
         "dell_jira_number": "",
         "dell_link": ""
+    },
+    {
+        "status": "Open",
+        "function": "BIOS",
+        "jira_number": "BFGS-131077",
+        "title": "[Wistron-SVR][Gaines 1.5/2.0] A question about Aptio 5.x SA50383 for Nvidia GB200/GB300 (9ABDA)",
+        "link": "https://oneami.atlassian.net/helpcenter/customer/portal/8/BFGS-131077",
+        "dell_jira_number": "",
+        "dell_link": ""
     }
 ]
